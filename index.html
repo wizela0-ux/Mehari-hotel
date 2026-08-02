@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>መሃሪ ሆቴል - ዲጂታል ፉድ ሜኑ</title>
+    <!-- Firebase JS SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #fafaf9;
+            --card-bg: #ffffff;
+            --text-main: #1c1917;
+            --text-sub: #78716c;
+            --primary-orange: #f97316;
+            --primary-hover: #ea580c;
+            --border-color: #fed7aa;
+            --shadow-color: rgba(249, 115, 22, 0.08);
+            --header-grad-1: #ea580c;
+            --header-grad-2: #c2410c;
+            --input-bg: #fff7ed;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --card-bg: #1e1e24;
+            --text-main: #f4f4f5;
+            --text-sub: #a1a1aa;
+            --primary-orange: #fb923c;
+            --primary-hover: #f97316;
+            --border-color: #3f3f46;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --header-grad-1: #27272a;
+            --header-grad-2: #18181b;
+            --input-bg: #27272a;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 30px; }
+        
+        .header { background: linear-gradient(135deg, var(--header-grad-1), var(--header-grad-2)); color: white; padding: 22px 15px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px; }
+        
+        .bank-accounts { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; font-size: 11px; opacity: 0.95; font-weight: 500; }
+        .bank-pill { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
+
+        .sidebar-btn { position: absolute; top: 20px; left: 15px; background: none; border: none; color: white; font-size: 26px; cursor: pointer; }
+        .container { padding: 15px; max-width: 480px; margin: 0 auto; }
+        
+        .gps-status { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 12px; font-size: 12px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #fca5a5; }
+        .gps-status.success { background: #ffedd5; color: #9a3412; border-color: #fed7aa; }
+
+        .table-box { background: var(--card-bg); padding: 12px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px var(--shadow-color); border: 1px solid var(--border-color); }
+        .table-box label { font-size: 12px; font-weight: bold; color: var(--primary-orange); display: block; margin-bottom: 6px; }
+        .table-box select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-weight: bold; background: var(--input-bg); color: var(--text-main); outline: none; }
+
+        .tabs-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; margin-bottom: 18px; scrollbar-width: none; }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        .tab-click { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; font-size: 13px; }
+        .tab-click.active { background: var(--primary-orange); color: white; border-color: var(--primary-orange); }
+
+        .category-block { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px var(--shadow-color); border: 1px solid var(--border-color); }
+        .category-title { font-size: 17px; color: var(--primary-orange); margin-bottom: 15px; border-left: 4px solid var(--primary-orange); padding-left: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        
+        .menu-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        .menu-item { display: flex; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; align-items: center; flex-wrap: wrap; }
+        .menu-item:last-child { border-bottom: none; padding-bottom: 0; }
+        
+        .item-img-placeholder { width: 70px; height: 70px; border-radius: 12px; background: var(--input-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary-orange); flex-shrink: 0; object-fit: cover; }
+        .item-info { flex: 1; min-width: 120px; }
+        .item-info h3 { font-size: 14px; color: var(--text-main); font-weight: bold; }
+        .item-price { font-size: 13px; font-weight: bold; color: var(--primary-orange); margin-top: 4px; display: block; }
+        
+        .qty-controls { display: flex; align-items: center; gap: 6px; background: var(--input-bg); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .qty-btn { background: var(--card-bg); border: 1px solid var(--border-color); width: 24px; height: 24px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--text-main); display: flex; align-items: center; justify-content: center; }
+        .qty-num { font-weight: bold; font-size: 13px; min-width: 16px; text-align: center; }
+
+        .order-btn { background: var(--primary-orange); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .order-btn:disabled { background: #a1a1aa; cursor: not-allowed; }
+
+        .order-note-input { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px; color: var(--text-main); background: var(--input-bg); outline: none; }
+
+        .toast-box { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #27272a; color: white; padding: 12px 24px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; font-weight: bold; font-size: 13px; text-align: center; max-width: 90%; display: none; }
+        .toast-box.loading { background: #9a3412; border: 1px solid #fb923c; }
+        .toast-box.success { background: #15803d; border: 1px solid #4ade80; }
+        .toast-box.error { background: #991b1b; border: 1px solid #fca5a5; }
+
+        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--card-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 1000; transition: 0.3s ease; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar.active { left: 0; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+        .sidebar-overlay.active { display: block; }
+        
+        .sidebar-header { border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-header h2 { font-size: 15px; color: var(--primary-orange); }
+
+        .theme-toggle-box { display: flex; align-items: center; justify-content: space-between; background: var(--input-bg); padding: 10px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--border-color); font-size: 12px; font-weight: bold; }
+        .theme-switch { cursor: pointer; padding: 4px 10px; background: var(--primary-orange); color: white; border-radius: 15px; font-size: 11px; }
+
+        .panel-toggle-btn { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; text-align: left; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 12px; }
+        .admin-box { display: none; flex-direction: column; gap: 8px; background: var(--input-bg); padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        .admin-box input, .admin-box select { padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 12px; width: 100%; background: var(--card-bg); color: var(--text-main); }
+        
+        .terms-btn { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 9px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 12px; cursor: pointer; margin-bottom: 15px; text-align: left; }
+
+        .complaint-box { background: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; font-size: 11px; text-align: center; margin-bottom: 15px; color: var(--text-main); }
+
+        .promo-box { text-align: center; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 11px; }
+        .promo-box h4 { font-size: 12px; color: var(--primary-orange); margin-bottom: 4px; }
+        .promo-box p { color: var(--text-sub); margin-bottom: 10px; }
+        .social-btns { display: flex; flex-direction: column; gap: 6px; }
+        .social-btn { display: block; padding: 8px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 11px; color: white; text-align: center; }
+        .btn-phone { background: #2563eb; }
+        .btn-tg { background: #0284c7; }
+        .btn-insta { background: #d97706; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--card-bg); border-radius: 15px; padding: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border-color); font-size: 12px; line-height: 1.6; }
+        .modal-content h3 { color: var(--primary-orange); margin-bottom: 10px; }
+        .close-modal { background: var(--primary-orange); color: white; border: none; padding: 6px 15px; border-radius: 6px; float: right; cursor: pointer; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <h2>⚙️ የማስተካከያ ክፍል</h2>
+                <button style="border:none; background:none; font-size:18px; cursor:pointer; color:var(--text-main);" onclick="closeSidebar()">✕</button>
+            </div>
+
+            <div class="theme-toggle-box">
+                <span>🌗 የጭብጥ ገጽታ (Theme)</span>
+                <span class="theme-switch" onclick="toggleTheme()" id="theme-switch-btn">🌙 Dark Mode</span>
+            </div>
+
+            <button class="panel-toggle-btn" onclick="openPanel('settings')">⚙️ የሲስተም ቅንብር (Settings) <span>▶</span></button>
+            <div id="panel-settings" class="admin-box">
+                <input type="password" id="pin-settings" placeholder="የአድሚን PIN ያስገቡ...">
+                <button type="button" onclick="unlockPanel('settings')" style="background:#475569; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:11px;">ማረጋገጫ</button>
+                <div id="fields-settings" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
+                    <input type="text" id="cfg-token" placeholder="Bot Token...">
+                    <div style="display:flex; gap:4px;">
+                        <input type="text" id="cfg-kitchen-new" placeholder="አዲስ Kitchen Chat ID...">
+                        <button type="button" onclick="addChatId()" style="background:#2563eb; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">➕ጨምር</button>
+                    </div>
+                    <div id="chat-ids-container" style="display:flex; flex-direction:column; gap:4px; max-height:80px; overflow-y:auto;"></div>
+                    <input type="number" id="cfg-distance" placeholder="የእርቀት ገደብ በሜትር...">
+                    <input type="password" id="cfg-new-pin" placeholder="አዲስ አድሚን PIN...">
+                    <button type="button" onclick="saveSettings()" style="background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">💾 ሴቭ አድርግ</button>
+                </div>
+            </div>
+
+            <button class="panel-toggle-btn" onclick="openPanel('edit')">📝 የሜኑና ምድብ ማስተካከያ <span>▶</span></button>
+            <div id="panel-edit" class="admin-box">
+                <input type="password" id="pin-edit" placeholder="የማስተካከያ PIN ያስገቡ...">
+                <button type="button" onclick="unlockPanel('edit')" style="background:#475569; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:11px;">ማረጋገጫ</button>
+                <div id="fields-edit" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
+                    
+                    <label style="font-weight:bold; font-size:11px;">📁 የምድብ (Category) አስተዳደር፦</label>
+                    <input type="text" id="new-cat-name" placeholder="አዲስ ምድብ ስም...">
+                    <div style="display:flex; gap:4px;">
+                        <button type="button" onclick="addNewCategory()" style="flex:1; background:#2563eb; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">➕ አዲስ ምድብ ጨምር</button>
+                        <button type="button" onclick="deleteCategory()" style="background:#dc2626; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ ምድብ ሰርዝ</button>
+                    </div>
+
+                    <hr style="border:0; border-top:1px solid var(--border-color); margin:5px 0;">
+
+                    <label style="font-weight:bold; font-size:11px;">🍽️ የምግብ ማስተካከያ፦</label>
+                    <select id="edit-item-select" onchange="loadItemToEdit()">
+                        <option value="">ለመቀየር/ለመሰረዝ ምግብ ይምረጡ...</option>
+                    </select>
+                    <input type="text" id="edit-name" placeholder="የምግብ ስም...">
+                    <input type="number" id="edit-price" placeholder="ዋጋ...">
+                    
+                    <label style="font-size:10px; font-weight:bold;">📸 ፎቶ ይምረጡ ወይም በካሜራ ያንሱ፦</label>
+                    <input type="file" id="edit-file-input" accept="image/*">
+
+                    <select id="edit-category-select"></select>
+
+                    <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                        <button type="button" onclick="saveMenuEdit('update')" style="flex:1; background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">💾 አድስ</button>
+                        <button type="button" onclick="saveMenuEdit('add')" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">➕ አዲስ ጨምር</button>
+                        <button type="button" onclick="deleteMenuItem()" style="background:#dc2626; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ ምግቡን ሰርዝ</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="terms-btn" onclick="toggleTermsModal(true)">📜 የአገልግሎት ደንቦች (Terms)</button>
+
+            <div class="complaint-box">
+                <b>📝 ለአስተያየት እና ቅሬታ</b><br>በስልክ ቁጥር 0911000000 ይደውሉ
+            </div>
+        </div>
+
+        <div class="promo-box">
+            <h4>Developed with ❤️ by Elias Nuri</h4>
+            <p>እንደዚህ አይነት ዘመናዊ የQR ሲስተም ለማሰራት፦</p>
+            <div class="social-btns">
+                <a href="tel:+251978631196" class="social-btn btn-phone">Contact on Phone</a>
+                <a href="https://t.me/wizzela" target="_blank" class="social-btn btn-tg">Contact on Telegram</a>
+                <a href="https://instagram.com/wiz_elaa" target="_blank" class="social-btn btn-insta">Contact on Instagram</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <button class="sidebar-btn" onclick="openSidebar()">☰</button>
+        <h1>መሃሪ ሆቴል ዲጂታል ፉድ ሜኑ</h1>
+        <div class="bank-accounts">
+            <span class="bank-pill">💳 CBE: 1000123456789</span>
+            <span class="bank-pill">💳 Awash: 0132088888888</span>
+            <span class="bank-pill">📱 Telebirr: 0911000000</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="gps-banner" class="gps-status">📍 የቦታ መገኛዎን በማረጋገጥ ላይ... ጂፒኤስ ያብሩ።</div>
+
+        <div class="table-box" id="table-container-box">
+            <label>🪑 የተቀመጡበትን የጠረጴዛ ቁጥር ይምረጡ፦</label>
+            <select id="main-table" onchange="syncTable()">
+                <option value="" disabled selected hidden>-- እባክዎን የጠረጴዛ ቁጥር ይምረጡ --</option>
+            </select>
+        </div>
+
+        <div class="tabs-container" id="dynamic-tabs"></div>
+
+        <div id="dynamic-categories"></div>
+    </div>
+
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <h3>📜 የሆቴሉ የአገልግሎት ደንቦች</h3>
+            <p>1. <b>የቦታ መለያ፡</b> ትዕዛዞች የሚስተናገዱት በሆቴሉ ክልል ውስጥ ላሉ ደንበኞች ብቻ ነው።</p>
+            <p>2. <b>የትዕዛዝ ሁኔታ፡</b> ትዕዛዝ ከላኩ በኋላ በስክሪኑ ላይ የኩሽናውን ማረጋገጫ ይከታተሉ።</p>
+            <p>3. <b>ክፍያ፡</b> ክፍያ በጥሬ ገንዘብ (Cash) ወይም በስክሪኑ ላይ በተጠቀሱት የባንክ አካውንቶች በሞባይል ባንኪንግ መክፈል ይችላሉ።</p>
+            <button class="close-modal" onclick="toggleTermsModal(false)">ዝጋ</button>
+        </div>
+    </div>
+
+    <div id="toast-notification" class="toast-box"></div>
+
+    <script>
+        // የወራቢ መገኛ (Coordinates Placeholder)
+        const CAFE_LAT = 8.0123;  
+        const CAFE_LON = 38.0722; 
+
+        const firebaseConfig = {
+            databaseURL: "https://sheger-menu-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let masterPin = "1234";
+        let botToken = "";
+        let kitchenIds = [];
+        let allowedDist = 100;
+        let tableNum = "";
+        let uploadedBase64Image = "";
+
+        let categories = {
+            "food": "🍽️ የምግብ ዝርዝር",
+            "drinks": "🥤 የለስላሳና መጠጦች"
+        };
+
+        let menuData = {
+            "food": [
+                { id: "m1", name: "ጥብስ (1/4)", price: 500, img: "" },
+                { id: "m2", name: "ጥሬ (1/4)", price: 500, img: "" },
+                { id: "m3", name: "ምላስ ለንበር (1/4)", price: 400, img: "" },
+                { id: "m4", name: "ኮሌክሽን", price: 500, img: "" },
+                { id: "m5", name: "ቁርጥ (1/4)", price: 500, img: "" },
+                { id: "m6", name: "ዱለት (1/4)", price: 400, img: "" },
+                { id: "m7", name: "ክትፎ (1/4)", price: 800, img: "" },
+                { id: "m8", name: "ጉበት (1/4)", price: 800, img: "" }
+            ],
+            "drinks": [
+                { id: "d1", name: "ለስላሳ", price: 60, img: "" },
+                { id: "d2", name: "ውሃ 2 ሊትር", price: 60, img: "" },
+                { id: "d3", name: "ውሃ 1 ሊትር", price: 50, img: "" },
+                { id: "d4", name: "ውሃ ½ ሊትር", price: 30, img: "" },
+                { id: "d5", name: "ቡና", price: 30, img: "" }
+            ]
+        };
+
+        window.onload = function() {
+            initTableSelect();
+            initTheme();
+
+            document.getElementById('edit-file-input').addEventListener('change', handleFileSelect);
+
+            db.ref('settings').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if(data) {
+                    masterPin = data.pin || "1234";
+                    botToken = data.token || "";
+                    kitchenIds = data.kitchenIds || [];
+                    allowedDist = parseFloat(data.distance) || 100;
+                    renderChatIds();
+                    checkLocation();
+                }
+            });
+
+            db.ref('categories').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if(data) categories = data;
+                else db.ref('categories').set(categories);
+                renderTabsAndCategories();
+                populateEditSelects();
+            });
+
+            db.ref('menu').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if(data) menuData = data;
+                else db.ref('menu').set(menuData);
+                renderTabsAndCategories();
+                populateEditSelects();
+            });
+        };
+
+        function initTableSelect() {
+            const select = document.getElementById('main-table');
+            for(let i=1; i<=15; i++) {
+                select.options[select.options.length] = new Option(`ጠረጴዛ ${i}`, `ጠረጴዛ ${i}`);
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeBtnText(savedTheme);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeBtnText(next);
+        }
+
+        function updateThemeBtnText(theme) {
+            document.getElementById('theme-switch-btn').innerText = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        function handleFileSelect(evt) {
+            const file = evt.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedBase64Image = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderTabsAndCategories() {
+            const tabsContainer = document.getElementById('dynamic-tabs');
+            const catContainer = document.getElementById('dynamic-categories');
+            tabsContainer.innerHTML = "";
+            catContainer.innerHTML = "";
+
+            let isFirst = true;
+            for(let catKey in categories) {
+                const catName = categories[catKey];
+                
+                tabsContainer.innerHTML += `
+                    <button class="tab-click ${isFirst ? 'active' : ''}" onclick="scrollToCategory('sec-${catKey}', this)">${catName}</button>`;
+
+                let itemsHTML = "";
+                const items = menuData[catKey] || [];
+                items.forEach((item, index) => {
+                    const imgTag = item.img ? 
+                        `<img class="item-img-placeholder" src="${item.img}" alt="${item.name}">` : 
+                        `<div class="item-img-placeholder">🍲</div>`;
+
+                    itemsHTML += `
+                        <div class="menu-item" id="item-${item.id}">
+                            ${imgTag}
+                            <div class="item-info">
+                                <h3>${index + 1}. ${item.name}</h3>
+                                <span class="item-price">${item.price} ብር</span>
+                            </div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQty('${item.id}', -1)">-</button>
+                                <span class="qty-num" id="qty-${item.id}">1</span>
+                                <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+                            </div>
+                            <button class="order-btn" id="btn-${item.id}" onclick="placeOrder('${item.id}', '${item.name}', ${item.price})">🛎️ እዘዝ</button>
+                            <input type="text" id="note-${item.id}" class="order-note-input" placeholder="ልዩ ፍላጎት ካለ (ምሳሌ፦ ሳይበስል)...">
+                        </div>`;
+                });
+
+                catContainer.innerHTML += `
+                    <div id="sec-${catKey}" class="category-block">
+                        <div class="category-title">${catName}</div>
+                        <div class="menu-list">${itemsHTML}</div>
+                    </div>`;
+
+                isFirst = false;
+            }
+        }
+
+        function scrollToCategory(id, btn) {
+            document.querySelectorAll('.tab-click').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById("toast-notification");
+            toast.innerText = message;
+            toast.className = `toast-box ${type}`;
+            toast.style.display = "block";
+            
+            if (type !== "loading") {
+                setTimeout(() => { toast.style.display = "none"; }, 4000);
+            }
+        }
+
+        function changeQty(id, amount) {
+            const el = document.getElementById(`qty-${id}`);
+            if(!el) return;
+            let current = parseInt(el.innerText) || 1;
+            current += amount;
+            if(current < 1) current = 1;
+            el.innerText = current;
+        }
+
+        function syncTable() { 
+            tableNum = document.getElementById('main-table').value; 
+            const box = document.getElementById('table-container-box');
+            box.style.border = "1px solid var(--border-color)";
+            box.style.backgroundColor = "var(--card-bg)";
+        }
+
+        function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
+        function toggleTermsModal(show) { document.getElementById('terms-modal').style.display = show ? 'flex' : 'none'; }
+
+        function openPanel(type) {
+            document.getElementById('panel-settings').style.display = 'none';
+            document.getElementById('panel-edit').style.display = 'none';
+            document.getElementById(`panel-${type}`).style.display = 'flex';
+        }
+
+        function unlockPanel(type) {
+            const pin = document.getElementById(`pin-${type}`).value;
+            if(pin === masterPin) {
+                document.getElementById(`fields-${type}`).style.display = 'flex';
+                if(type === 'settings') {
+                    document.getElementById('cfg-token').value = botToken;
+                    document.getElementById('cfg-distance').value = allowedDist;
+                }
+            } else { alert("❌ የተሳሳተ ሚስጥራዊ ፒን ነው!"); }
+        }
+
+        function addChatId() {
+            const val = document.getElementById('cfg-kitchen-new').value.trim();
+            if(val && !kitchenIds.includes(val)) {
+                kitchenIds.push(val);
+                document.getElementById('cfg-kitchen-new').value = "";
+                renderChatIds();
+            }
+        }
+
+        function removeChatId(index) {
+            kitchenIds.splice(index, 1);
+            renderChatIds();
+        }
+
+        function renderChatIds() {
+            const container = document.getElementById('chat-ids-container');
+            if(!container) return;
+            container.innerHTML = "";
+            kitchenIds.forEach((id, index) => {
+                container.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; background:var(--card-bg); padding:4px 8px; border-radius:4px; border:1px solid var(--border-color);">
+                        <span>ID: ${id}</span>
+                        <button onclick="removeChatId(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold;">✕</button>
+                    </div>`;
+            });
+        }
+
+        function saveSettings() {
+            botToken = document.getElementById('cfg-token').value.trim();
+            allowedDist = parseFloat(document.getElementById('cfg-distance').value) || 100;
+            let np = document.getElementById('cfg-new-pin').value.trim();
+            if(np) masterPin = np;
+            
+            db.ref('settings').set({
+                pin: masterPin,
+                token: botToken,
+                kitchenIds: kitchenIds,
+                distance: allowedDist
+            }).then(() => {
+                alert("⚙️ የሲስተም ቅንብሮች በተሳካ ሁኔታ ተቀምጠዋል!");
+                document.getElementById('panel-settings').style.display = 'none';
+                document.getElementById('fields-settings').style.display = 'none';
+                closeSidebar();
+            });
+        }
+
+        function populateEditSelects() {
+            const catSel = document.getElementById('edit-category-select');
+            const itemSel = document.getElementById('edit-item-select');
+            if(!catSel || !itemSel) return;
+
+            catSel.innerHTML = "";
+            itemSel.innerHTML = '<option value="">ለመቀየር/ለመሰረዝ ምግብ ይምረጡ...</option>';
+
+            for(let catKey in categories) {
+                catSel.options[catSel.options.length] = new Option(categories[catKey], catKey);
+
+                (menuData[catKey] || []).forEach(item => {
+                    itemSel.options[itemSel.options.length] = new Option(`${item.name} (${item.price} ብር)`, `${catKey}:${item.id}`);
+                });
+            }
+        }
+
+        function addNewCategory() {
+            const name = document.getElementById('new-cat-name').value.trim();
+            if(!name) { alert("⚠️ እባክዎ የምድብ ስም ያስገቡ!"); return; }
+            const key = "cat_" + Date.now();
+            categories[key] = name;
+            menuData[key] = [];
+
+            db.ref('categories').set(categories);
+            db.ref('menu').set(menuData).then(() => {
+                alert("✅ አዲስ ምድብ ተጨምሯል!");
+                document.getElementById('new-cat-name').value = "";
+            });
+        }
+
+        function deleteCategory() {
+            const catKey = document.getElementById('edit-category-select').value;
+            if(!catKey) { alert("⚠️ እባክዎ የሚሰረዝ ምድብ ይምረጡ!"); return; }
+
+            if(confirm(`እርግጠኛ ነዎት "${categories[catKey]}" የሚለውን ምድብ መሰረዝ ይፈልጋሉ?`)) {
+                delete categories[catKey];
+                delete menuData[catKey];
+
+                db.ref('categories').set(categories);
+                db.ref('menu').set(menuData).then(() => {
+                    alert("🗑️ ምድቡ ተሰርዟል!");
+                });
+            }
+        }
+
+        function loadItemToEdit() {
+            const val = document.getElementById('edit-item-select').value;
+            if(!val) return;
+            const [catKey, id] = val.split(':');
+            const item = (menuData[catKey] || []).find(i => i.id === id);
+            if(item) {
+                document.getElementById('edit-name').value = item.name;
+                document.getElementById('edit-price').value = item.price;
+                document.getElementById('edit-category-select').value = catKey;
+                uploadedBase64Image = item.img || "";
+            }
+        }
+
+        function saveMenuEdit(action) {
+            let name = document.getElementById('edit-name').value.trim();
+            const price = parseFloat(document.getElementById('edit-price').value);
+            const catKey = document.getElementById('edit-category-select').value;
+
+            if(!name || isNaN(price)) { alert("⚠️ እባክዎ ስም እና ዋጋ ያስገቡ!"); return; }
+
+            if(!menuData[catKey]) menuData[catKey] = [];
+
+            if(action === 'add') {
+                const newId = "item_" + Date.now();
+                menuData[catKey].push({ id: newId, name: name, price: price, img: uploadedBase64Image });
+            } else if(action === 'update') {
+                const val = document.getElementById('edit-item-select').value;
+                if(!val) { alert("⚠️ የሚቀየር ምግብ ይምረጡ!"); return; }
+                const [oldCat, id] = val.split(':');
+                const oldIdx = menuData[oldCat].findIndex(i => i.id === id);
+
+                if(oldCat === catKey && oldIdx > -1) {
+                    menuData[catKey][oldIdx] = { id: id, name: name, price: price, img: uploadedBase64Image };
+                } else {
+                    if(oldIdx > -1) menuData[oldCat].splice(oldIdx, 1);
+                    menuData[catKey].push({ id: id, name: name, price: price, img: uploadedBase64Image });
+                }
+            }
+
+            db.ref('menu').set(menuData).then(() => {
+                alert("📝 ሜኑው በተሳካ ሁኔታ ተዘምኗል!");
+                document.getElementById('edit-name').value = "";
+                document.getElementById('edit-price').value = "";
+                uploadedBase64Image = "";
+                closeSidebar();
+            });
+        }
+
+        function deleteMenuItem() {
+            const val = document.getElementById('edit-item-select').value;
+            if(!val) { alert("⚠️ እባክዎ የሚሰረዝ ምግብ ይምረጡ!"); return; }
+            const [catKey, id] = val.split(':');
+
+            if(confirm("እርግጠኛ ነዎት ይህንን ምግብ መሰረዝ ይፈልጋሉ?")) {
+                menuData[catKey] = menuData[catKey].filter(i => i.id !== id);
+                db.ref('menu').set(menuData).then(() => {
+                    alert("🗑️ ምግቡ ተሰርዟል!");
+                    document.getElementById('edit-name').value = "";
+                    document.getElementById('edit-price').value = "";
+                    closeSidebar();
+                });
+            }
+        }
+
+        function checkLocation() {
+            if (!navigator.geolocation) return;
+            navigator.geolocation.watchPosition(pos => {
+                const uLat = pos.coords.latitude, uLon = pos.coords.longitude;
+                const R = 6371e3;
+                const p1 = CAFE_LAT * Math.PI/180, p2 = uLat * Math.PI/180;
+                const dP = (uLat-CAFE_LAT) * Math.PI/180, dL = (uLon-CAFE_LON) * Math.PI/180;
+                const a = Math.sin(dP/2) * Math.sin(dP/2) + Math.cos(p1) * Math.cos(p2) * Math.sin(dL/2) * Math.sin(dL/2);
+                const distance = R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+
+                const b = document.getElementById('gps-banner');
+                if(distance <= allowedDist) {
+                    b.innerText = "✅ እርስዎ በመሃሪ ሆቴል ክልል ውስጥ ይገኛሉ። ማዘዝ ይችላሉ!"; 
+                    b.className = "gps-status success";
+                    document.querySelectorAll('.order-btn').forEach(btn => btn.disabled = false);
+                } else {
+                    b.innerText = `❌ ከሆቴሉ ክልል ውጪ ነዎት (${Math.round(distance)} ሜትር)። ማዘዝ አይችሉም!`; 
+                    b.className = "gps-status";
+                    document.querySelectorAll('.order-btn').forEach(btn => btn.disabled = true);
+                }
+            }, () => {}, { enableHighAccuracy: true });
+        }
+
+        async function placeOrder(id, name, price) {
+            const boxEl = document.getElementById('table-container-box');
+
+            if (tableNum === "" || tableNum === null) {
+                alert("🚨 እባክዎን የተቀመጡበትን የጠረጴዛ ቁጥር ይምረጡ!");
+                boxEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                boxEl.style.border = "2px solid #ef4444";
+                return;
+            }
+
+            if(!botToken || kitchenIds.length === 0) { 
+                showToast("⚠️ ቦት እና ቻት አይዲ በቅንብር ያዋቅሩ!", "error"); 
+                return; 
+            }
+            
+            const qty = parseInt(document.getElementById(`qty-${id}`).innerText) || 1;
+            const totalItemPrice = price * qty;
+            const noteValue = document.getElementById(`note-${id}`).value.trim();
+            const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+
+            let msg = `🚨 አዲስ ትዕዛዝ መጥቷል! [ID: ${orderId}]
+━━━━━━━━━━━━━
+📍 ቦታ፦ መሃሪ ሆቴል
+🪑 ${tableNum}
+🍽️ የታዘዘው፦ ${name}
+🔢 ብዛት፦ ${qty}`;
+
+            if (noteValue !== "") msg += `\n📝 ማስታወሻ፦ ${noteValue}`;
+            msg += `\n💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር\n━━━━━━━━━━━━━`;
+
+            // Firebase ላይ ትዕዛዙን መመዝገብ
+            db.ref(`orders/${orderId}`).set({
+                status: "pending",
+                table: tableNum,
+                item: name,
+                qty: qty,
+                price: totalItemPrice
+            });
+
+            // ሪልታይም የትዕዛዙን ሁኔታ (Status) መከታተል
+            db.ref(`orders/${orderId}/status`).on('value', (snapshot) => {
+                const status = snapshot.val();
+                if(status === 'accepted') {
+                    showToast("ትዕዛዝዎ በኩሽናው ተቀብሏል! 👨‍🍳 ምግቡ እየተዘጋጀ ነው...", "success");
+                }
+            });
+
+            showToast("ትዕዛዙ በመላክ ላይ ነው... ⏳", "loading");
+            
+            try {
+                const orderPromises = kitchenIds.map(chatId => {
+                    return fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            chat_id: chatId, 
+                            text: msg,
+                            reply_markup: {
+                                inline_keyboard: [[
+                                    { text: "✅ ትዕዛዝ ተቀበል", callback_data: `accept_${orderId}` }
+                                ]]
+                            }
+                        })
+                    });
+                });
+                
+                await Promise.all(orderPromises);
+                showToast("ትዕዛዝዎ በተሳካ ሁኔታ ደርሷል! ኩሽናው እስኪቀበለው ይጠብቁ... ⏳", "success");
+                
+                document.getElementById(`qty-${id}`).innerText = "1";
+                document.getElementById(`note-${id}`).value = "";
+                
+            } catch (error) {
+                showToast("ትዕዛዙ አልደረሰም! እባክዎ ኔትወርክዎን ያረጋግጡ። ❌", "error");
+            }
+        }
+    </script>
+</body>
+</html>
