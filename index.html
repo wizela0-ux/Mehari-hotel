@@ -98,7 +98,7 @@
         .toast-box.error { background: #991b1b; border: 1px solid #fca5a5; }
 
         /* Sidebar & Modals */
-        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--card-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 2000; transition: 0.3s ease; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--card-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 2000; transition: left 0.3s ease; padding: 20px; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; justify-content: space-between; }
         .sidebar.active { left: 0; }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; }
         .sidebar-overlay.active { display: block; }
@@ -118,7 +118,7 @@
         .modal-content h3 { color: var(--primary-orange); margin-bottom: 12px; font-size: 15px; }
         .close-modal { background: #64748b; color: white; border: none; padding: 6px 15px; border-radius: 6px; float: right; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
-        .promo-box { text-align: center; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 11px; }
+        .promo-box { text-align: center; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 11px; margin-top: 15px; }
         .promo-box h4 { font-size: 12px; color: var(--primary-orange); margin-bottom: 4px; }
         .promo-box p { color: var(--text-sub); margin-bottom: 10px; }
         .social-btns { display: flex; flex-direction: column; gap: 6px; }
@@ -158,7 +158,7 @@
                     <div id="chat-ids-container" style="display:flex; flex-direction:column; gap:4px; max-height:80px; overflow-y:auto;"></div>
                     <input type="number" id="cfg-distance" placeholder="Distance Limit (Meters)...">
                     <input type="password" id="cfg-new-pin" placeholder="New Admin PIN...">
-                    <button type="button" onclick="saveSettings()" style="background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">Save Settings</button>
+                    <button type="button" onclick="saveSettings()" style="background:#ea580c; color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer;">💾 Save Settings</button>
                 </div>
             </div>
 
@@ -195,10 +195,15 @@
                     <select id="edit-category-select"></select>
 
                     <div style="display:flex; gap:4px; flex-wrap:wrap;">
-                        <button type="button" onclick="saveMenuEdit('update')" style="flex:1; background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">💾 Update Item</button>
+                        <button type="button" onclick="saveMenuEdit('update')" style="flex:1; background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">📝 Update Item</button>
                         <button type="button" onclick="saveMenuEdit('add')" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">➕ Add Item</button>
                         <button type="button" onclick="deleteMenuItem()" style="background:#dc2626; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ Delete Item</button>
                     </div>
+
+                    <hr style="border:0; border-top:1px solid var(--border-color); margin:5px 0;">
+                    
+                    <!-- Global Save & Apply Menu Changes Button -->
+                    <button type="button" onclick="saveAndApplyMenu()" style="background:#16a34a; color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px; text-align:center; width:100%;">💾 Save & Apply Menu Changes</button>
                 </div>
             </div>
 
@@ -304,8 +309,9 @@
     <div id="toast-notification" class="toast-box"></div>
 
     <script>
-        const CAFE_LAT = 8.0123;  
-        const CAFE_LON = 38.0722; 
+        // Updated GPS Coordinates
+        const CAFE_LAT = 7.841134;  
+        const CAFE_LON = 38.183795; 
 
         const firebaseConfig = {
             databaseURL: "https://mehari-hotel-default-rtdb.firebaseio.com/"
@@ -570,15 +576,27 @@
             const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
             const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-            let msg = `🚨 አዲስ የተሰበሰበ ትዕዛዝ! [ID: ${orderId}]\n━━━━━━━━━━━━━\n📍 ቦታ፦ መሃሪ ሆቴል\n🪑 ${tableNum}\n\n📋 የታዘዙ ዝርዝር፦\n`;
+            let msg = `🚨 አዲስ የተሰበሰበ ትዕዛዝ! [ID: ${orderId}]
+━━━━━━━━━━━━━
+📍 ቦታ፦ መሃሪ ሆቴል
+🪑 ${tableNum}
+
+📋 የታዘዙ ዝርዝር፦
+`;
             
             cartItems.forEach((item, idx) => {
-                msg += `${idx + 1}. ${item.name}  x ${item.qty} = ${item.price * item.qty} ብር\n`;
-                if(item.note) msg += `   └ ማስታወሻ፦ ${item.note}\n`;
+                msg += `${idx + 1}. ${item.name}  x ${item.qty} = ${item.price * item.qty} ብር
+`;
+                if(item.note) msg += `   └ ማስታወሻ፦ ${item.note}
+`;
             });
 
-            if(globalNote) msg += `\n📝 ጠቅላላ ማስታወሻ፦ ${globalNote}\n`;
-            msg += `\n💰 ጠቅላላ ድምር፦ ${totalPrice} ብር\n━━━━━━━━━━━━━`;
+            if(globalNote) msg += `
+📝 ጠቅላላ ማስታወሻ፦ ${globalNote}
+`;
+            msg += `
+💰 ጠቅላላ ድምር፦ ${totalPrice} ብር
+━━━━━━━━━━━━━`;
 
             db.ref(`orders/${orderId}`).set({
                 status: "pending",
@@ -604,9 +622,17 @@
             const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
             const totalItemPrice = price * qty;
 
-            let msg = `🚨 አዲስ ትዕዛዝ መጥቷል! [ID: ${orderId}]\n━━━━━━━━━━━━━\n📍 ቦታ፦ መሃሪ ሆቴል\n🪑 ${tableNum}\n🍽️ የታዘዘው፦ ${name}\n🔢 ብዛት፦ ${qty}`;
-            if (noteValue) msg += `\n📝 ማስታወሻ፦ ${noteValue}`;
-            msg += `\n💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር\n━━━━━━━━━━━━━`;
+            let msg = `🚨 አዲስ ትዕዛዝ መጥቷል! [ID: ${orderId}]
+━━━━━━━━━━━━━
+📍 ቦታ፦ መሃሪ ሆቴል
+🪑 ${tableNum}
+🍽️ የታዘዘው፦ ${name}
+🔢 ብዛት፦ ${qty}`;
+            if (noteValue) msg += `
+📝 ማስታወሻ፦ ${noteValue}`;
+            msg += `
+💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር
+━━━━━━━━━━━━━`;
 
             db.ref(`orders/${orderId}`).set({ status: "pending", table: tableNum, item: name, qty, price: totalItemPrice });
 
@@ -671,8 +697,35 @@
             if (type !== "loading") setTimeout(() => { toast.style.display = "none"; }, 4000);
         }
 
-        function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
-        function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
+        // Sidebar Control & Background Lock logic
+        function openSidebar() { 
+            document.getElementById('sidebar').classList.add('active'); 
+            document.getElementById('overlay').classList.add('active'); 
+            document.body.style.overflow = 'hidden'; // Lock background scrolling
+        }
+
+        function closeSidebar() { 
+            document.getElementById('sidebar').classList.remove('active'); 
+            document.getElementById('overlay').classList.remove('active'); 
+            document.body.style.overflow = 'auto'; // Restore background scrolling
+            resetSidebarPanels(); // Auto-collapse panels and reset forms
+        }
+
+        function resetSidebarPanels() {
+            // Close all open panels
+            document.getElementById('panel-settings').style.display = 'none';
+            document.getElementById('panel-edit').style.display = 'none';
+            
+            // Hide field groups
+            document.getElementById('fields-settings').style.display = 'none';
+            document.getElementById('fields-edit').style.display = 'none';
+            
+            // Clear inputs
+            document.getElementById('pin-settings').value = '';
+            document.getElementById('pin-edit').value = '';
+            document.getElementById('cfg-new-pin').value = '';
+        }
+
         function toggleTermsModal(show) { document.getElementById('terms-modal').style.display = show ? 'flex' : 'none'; }
 
         function openPanel(type) {
@@ -724,7 +777,19 @@
             
             db.ref('settings').set({ pin: masterPin, token: botToken, kitchenIds, distance: allowedDist }).then(() => {
                 alert("⚙️ Settings saved successfully!");
-                closeSidebar();
+                closeSidebar(); // Automatically collapses and closes sidebar cleanly
+            });
+        }
+
+        function saveAndApplyMenu() {
+            Promise.all([
+                db.ref('categoriesList').set(categoriesList),
+                db.ref('menu').set(menuData)
+            ]).then(() => {
+                alert("💾 All Menu and Category changes saved successfully!");
+                closeSidebar(); // Clean exit and collapse
+            }).catch(err => {
+                alert("❌ Error saving menu: " + err.message);
             });
         }
 
@@ -754,8 +819,9 @@
 
             db.ref('categoriesList').set(categoriesList);
             db.ref('menu').set(menuData).then(() => {
-                alert("✅ New category added!");
+                showToast("New category added!", "success");
                 document.getElementById('cat-name-input').value = "";
+                populateEditSelects();
             });
         }
 
@@ -768,8 +834,9 @@
             if(cat) cat.name = newName;
 
             db.ref('categoriesList').set(categoriesList).then(() => {
-                alert("✏️ Category name updated!");
+                showToast("Category name updated!", "success");
                 document.getElementById('cat-name-input').value = "";
+                populateEditSelects();
             });
         }
 
@@ -804,7 +871,7 @@
                 delete menuData[catKey];
 
                 db.ref('categoriesList').set(categoriesList);
-                db.ref('menu').set(menuData).then(() => { alert("🗑️ Category deleted!"); });
+                db.ref('menu').set(menuData).then(() => { showToast("Category deleted!", "success"); });
             }
         }
 
@@ -846,11 +913,10 @@
             }
 
             db.ref('menu').set(menuData).then(() => {
-                alert("📝 Menu item saved!");
+                showToast("Menu item updated in draft!", "success");
                 document.getElementById('edit-name').value = "";
                 document.getElementById('edit-price').value = "";
                 uploadedBase64Image = "";
-                closeSidebar();
             });
         }
 
@@ -862,8 +928,9 @@
             if(confirm("Are you sure you want to delete this menu item?")) {
                 menuData[catKey] = menuData[catKey].filter(i => i.id !== id);
                 db.ref('menu').set(menuData).then(() => {
-                    alert("🗑️ Item deleted!");
-                    closeSidebar();
+                    showToast("Item deleted!", "success");
+                    document.getElementById('edit-name').value = "";
+                    document.getElementById('edit-price').value = "";
                 });
             }
         }
