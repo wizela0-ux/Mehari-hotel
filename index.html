@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>መሃሪ ሆቴል - ዲጂታል ፉድ ሜኑ</title>
+    <title>Mehari Hotel - Digital Menu</title>
     <!-- Firebase JS SDK v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -37,24 +37,18 @@
             --input-bg: #27272a;
         }
 
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 30px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 90px; }
         
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(18px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulseOrange {
-            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
-        }
-
         .header { background: linear-gradient(135deg, var(--header-grad-1), var(--header-grad-2)); color: white; padding: 22px 15px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
         
-        .bank-accounts { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; font-size: 11px; opacity: 0.95; font-weight: 500; }
+        .bank-accounts { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 11px; opacity: 0.95; }
         .bank-pill { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
 
         .sidebar-btn { position: absolute; top: 20px; left: 15px; background: none; border: none; color: white; font-size: 26px; cursor: pointer; }
@@ -70,16 +64,14 @@
         .tabs-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; margin-bottom: 18px; scrollbar-width: none; }
         .tabs-container::-webkit-scrollbar { display: none; }
         .tab-click { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; font-size: 13px; }
-        .tab-click.active { background: var(--primary-orange); color: white; border-color: var(--primary-orange); animation: pulseOrange 2s infinite; }
+        .tab-click.active { background: var(--primary-orange); color: white; border-color: var(--primary-orange); }
 
-        .category-block { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px var(--shadow-color); border: 1px solid var(--border-color); animation: fadeInUp 0.5s ease-out forwards; }
-        .category-title { font-size: 17px; color: var(--primary-orange); margin-bottom: 15px; border-left: 4px solid var(--primary-orange); padding-left: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .category-block { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px var(--shadow-color); border: 1px solid var(--border-color); animation: fadeInUp 0.4s ease-out forwards; }
+        .category-title { font-size: 17px; color: var(--primary-orange); margin-bottom: 15px; border-left: 4px solid var(--primary-orange); padding-left: 10px; font-weight: bold; }
         
         .menu-list { display: flex; flex-direction: column; gap: 15px; }
-        
-        .menu-item { display: flex; gap: 12px; border-bottom: 1px solid var(--border-color); padding: 10px 8px; border-radius: 12px; align-items: center; flex-wrap: wrap; animation: fadeInUp 0.4s ease forwards; }
-        .menu-item:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--shadow-color); background: var(--input-bg); }
-        .menu-item:last-child { border-bottom: none; }
+        .menu-item { display: flex; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; align-items: center; flex-wrap: wrap; }
+        .menu-item:last-child { border-bottom: none; padding-bottom: 0; }
         
         .item-img-placeholder { width: 70px; height: 70px; border-radius: 12px; background: var(--input-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary-orange); flex-shrink: 0; object-fit: cover; }
         .item-info { flex: 1; min-width: 120px; }
@@ -90,24 +82,29 @@
         .qty-btn { background: var(--card-bg); border: 1px solid var(--border-color); width: 24px; height: 24px; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--text-main); display: flex; align-items: center; justify-content: center; }
         .qty-num { font-weight: bold; font-size: 13px; min-width: 16px; text-align: center; }
 
-        .order-btn { background: var(--primary-orange); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .order-btn:hover { background: var(--primary-hover); transform: scale(1.03); }
-        .order-btn:disabled { background: #a1a1aa; cursor: not-allowed; transform: none; }
+        .btn-group { display: flex; gap: 6px; width: 100%; margin-top: 6px; }
+        .order-btn { flex: 1; background: var(--primary-orange); color: white; border: none; padding: 8px 6px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; text-align: center; }
+        .cart-add-btn { flex: 1; background: #2563eb; color: white; border: none; padding: 8px 6px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; text-align: center; }
 
         .order-note-input { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px; color: var(--text-main); background: var(--input-bg); outline: none; }
 
-        .toast-box { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #27272a; color: white; padding: 12px 24px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; font-weight: bold; font-size: 13px; text-align: center; max-width: 90%; display: none; }
+        /* Floating Cart Bar */
+        .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: #18181b; color: white; width: 90%; max-width: 440px; padding: 12px 20px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); display: none; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid #3f3f46; }
+        .cart-bar-btn { background: var(--primary-orange); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+        .toast-box { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #27272a; color: white; padding: 12px 24px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; font-weight: bold; font-size: 13px; text-align: center; max-width: 90%; display: none; }
         .toast-box.loading { background: #9a3412; border: 1px solid #fb923c; }
         .toast-box.success { background: #15803d; border: 1px solid #4ade80; }
         .toast-box.error { background: #991b1b; border: 1px solid #fca5a5; }
 
-        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--card-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 1000; transition: 0.3s ease; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
+        /* Sidebar & Modals */
+        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--card-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 2000; transition: 0.3s ease; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
         .sidebar.active { left: 0; }
-        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; }
         .sidebar-overlay.active { display: block; }
         
         .sidebar-header { border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .sidebar-header h2 { font-size: 15px; color: var(--primary-orange); }
+        .sidebar-header h2 { font-size: 16px; color: var(--primary-orange); font-weight: bold; }
 
         .theme-toggle-box { display: flex; align-items: center; justify-content: space-between; background: var(--input-bg); padding: 10px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--border-color); font-size: 12px; font-weight: bold; }
         .theme-switch { cursor: pointer; padding: 4px 10px; background: var(--primary-orange); color: white; border-radius: 15px; font-size: 11px; }
@@ -115,10 +112,11 @@
         .panel-toggle-btn { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; text-align: left; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 12px; }
         .admin-box { display: none; flex-direction: column; gap: 8px; background: var(--input-bg); padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border-color); }
         .admin-box input, .admin-box select { padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 12px; width: 100%; background: var(--card-bg); color: var(--text-main); }
-        
-        .terms-btn { background: none; border: 1px solid var(--border-color); color: var(--text-main); padding: 9px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 12px; cursor: pointer; margin-bottom: 15px; text-align: left; }
 
-        .complaint-box { background: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; font-size: 11px; text-align: center; margin-bottom: 15px; color: var(--text-main); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--card-bg); border-radius: 15px; padding: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border-color); font-size: 12px; line-height: 1.6; }
+        .modal-content h3 { color: var(--primary-orange); margin-bottom: 12px; font-size: 15px; }
+        .close-modal { background: #64748b; color: white; border: none; padding: 6px 15px; border-radius: 6px; float: right; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
         .promo-box { text-align: center; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 11px; }
         .promo-box h4 { font-size: 12px; color: var(--primary-orange); margin-bottom: 4px; }
@@ -128,86 +126,85 @@
         .btn-phone { background: #2563eb; }
         .btn-tg { background: #0284c7; }
         .btn-insta { background: #d97706; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--card-bg); border-radius: 15px; padding: 20px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border-color); font-size: 12px; line-height: 1.6; }
-        .modal-content h3 { color: var(--primary-orange); margin-bottom: 10px; }
-        .close-modal { background: var(--primary-orange); color: white; border: none; padding: 6px 15px; border-radius: 6px; float: right; cursor: pointer; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
+    <!-- Sidebar Controls (English UI) -->
     <div class="sidebar" id="sidebar">
         <div>
             <div class="sidebar-header">
-                <h2>⚙️ የማስተካከያ ክፍል</h2>
+                <h2>⚙️ Admin Control Panel</h2>
                 <button style="border:none; background:none; font-size:18px; cursor:pointer; color:var(--text-main);" onclick="closeSidebar()">✕</button>
             </div>
 
             <div class="theme-toggle-box">
-                <span>🌗 የጭብጥ ገጽታ (Theme)</span>
+                <span>🌗 Theme Mode</span>
                 <span class="theme-switch" onclick="toggleTheme()" id="theme-switch-btn">🌙 Dark Mode</span>
             </div>
 
-            <button class="panel-toggle-btn" onclick="openPanel('settings')">⚙️ የሲስተም ቅንብር (Settings) <span>▶</span></button>
+            <button class="panel-toggle-btn" onclick="openPanel('settings')">⚙️ Settings <span>▶</span></button>
             <div id="panel-settings" class="admin-box">
-                <input type="password" id="pin-settings" placeholder="የአድሚን PIN ያስገቡ...">
-                <button type="button" onclick="unlockPanel('settings')" style="background:#475569; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:11px;">ማረጋገጫ</button>
+                <input type="password" id="pin-settings" placeholder="Enter Admin PIN...">
+                <button type="button" onclick="unlockPanel('settings')" style="background:#475569; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:11px;">Verify PIN</button>
                 <div id="fields-settings" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
                     <input type="text" id="cfg-token" placeholder="Bot Token...">
                     <div style="display:flex; gap:4px;">
-                        <input type="text" id="cfg-kitchen-new" placeholder="አዲስ Kitchen Chat ID...">
-                        <button type="button" onclick="addChatId()" style="background:#2563eb; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">➕ጨምር</button>
+                        <input type="text" id="cfg-kitchen-new" placeholder="Kitchen Chat ID...">
+                        <button type="button" onclick="addChatId()" style="background:#2563eb; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">Add</button>
                     </div>
                     <div id="chat-ids-container" style="display:flex; flex-direction:column; gap:4px; max-height:80px; overflow-y:auto;"></div>
-                    <input type="number" id="cfg-distance" placeholder="የእርቀት ገደብ በሜትር...">
-                    <input type="password" id="cfg-new-pin" placeholder="አዲስ አድሚን PIN...">
-                    <button type="button" onclick="saveSettings()" style="background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">💾 ሴቭ አድርግ</button>
+                    <input type="number" id="cfg-distance" placeholder="Distance Limit (Meters)...">
+                    <input type="password" id="cfg-new-pin" placeholder="New Admin PIN...">
+                    <button type="button" onclick="saveSettings()" style="background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer;">Save Settings</button>
                 </div>
             </div>
 
-            <button class="panel-toggle-btn" onclick="openPanel('edit')">📝 የሜኑና ምድብ ማስተካከያ <span>▶</span></button>
+            <button class="panel-toggle-btn" onclick="openPanel('edit')">📝 Edit Menu & Categories <span>▶</span></button>
             <div id="panel-edit" class="admin-box">
-                <input type="password" id="pin-edit" placeholder="የማስተካከያ PIN ያስገቡ...">
-                <button type="button" onclick="unlockPanel('edit')" style="background:#475569; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:11px;">ማረጋገጫ</button>
+                <input type="password" id="pin-edit" placeholder="Enter PIN...">
+                <button type="button" onclick="unlockPanel('edit')" style="background:#475569; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:11px;">Verify PIN</button>
                 <div id="fields-edit" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
                     
-                    <label style="font-weight:bold; font-size:11px;">📁 የምድብ (Category) አስተዳደር፦</label>
-                    <input type="text" id="cat-name-input" placeholder="የምድብ ስም (ምሳሌ፦ 1. ቁርስ)...">
+                    <label style="font-weight:bold; font-size:11px;">📁 Category Management:</label>
+                    <input type="text" id="cat-name-input" placeholder="Category Name...">
                     <div style="display:flex; gap:4px; flex-wrap:wrap;">
-                        <button type="button" onclick="addNewCategory()" style="flex:1; background:#2563eb; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">➕ አዲስ ጨምር</button>
-                        <button type="button" onclick="editCategoryName()" style="flex:1; background:#f59e0b; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ ምድብ አስተካክል</button>
-                        <button type="button" onclick="deleteCategory()" style="background:#dc2626; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ ምድብ ሰርዝ</button>
+                        <button type="button" onclick="addNewCategory()" style="flex:1; background:#2563eb; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">➕ Add New</button>
+                        <button type="button" onclick="editCategoryName()" style="flex:1; background:#f59e0b; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Edit Name</button>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button type="button" onclick="moveCategory('up')" style="flex:1; background:#475569; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">⬆️ Move Up</button>
+                        <button type="button" onclick="moveCategory('down')" style="flex:1; background:#475569; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">⬇️ Move Down</button>
+                        <button type="button" onclick="deleteCategory()" style="background:#dc2626; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ Delete</button>
                     </div>
 
                     <hr style="border:0; border-top:1px solid var(--border-color); margin:5px 0;">
 
-                    <label style="font-weight:bold; font-size:11px;">🍽️ የምግብ ማስተካከያ፦</label>
+                    <label style="font-weight:bold; font-size:11px;">🍽️ Menu Item Management:</label>
                     <select id="edit-item-select" onchange="loadItemToEdit()">
-                        <option value="">ለመቀየር/ለመሰረዝ ምግብ ይምረጡ...</option>
+                        <option value="">Select item to edit/delete...</option>
                     </select>
-                    <input type="text" id="edit-name" placeholder="የምግብ ስም...">
-                    <input type="number" id="edit-price" placeholder="ዋጋ...">
+                    <input type="text" id="edit-name" placeholder="Item Name...">
+                    <input type="number" id="edit-price" placeholder="Price...">
                     
-                    <!-- Updated File Input (Now opens Gallery or Camera dynamically) -->
-                    <label style="font-size:11px; font-weight:bold; color:var(--primary-orange);">📸 ፎቶ ይምረጡ ወይም በካሜራ ያንሱ፦</label>
-                    <input type="file" id="edit-file-input" accept="image/*">
+                    <!-- Trigger Image Options Pop-up -->
+                    <button type="button" onclick="openImageChoiceModal()" style="background:var(--input-bg); border:1px solid var(--border-color); color:var(--text-main); padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">📸 Select Photo Option</button>
 
                     <select id="edit-category-select"></select>
 
                     <div style="display:flex; gap:4px; flex-wrap:wrap;">
-                        <button type="button" onclick="saveMenuEdit('update')" style="flex:1; background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">💾 አድስ</button>
-                        <button type="button" onclick="saveMenuEdit('add')" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">➕ አዲስ ጨምር</button>
-                        <button type="button" onclick="deleteMenuItem()" style="background:#dc2626; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ ምግቡን ሰርዝ</button>
+                        <button type="button" onclick="saveMenuEdit('update')" style="flex:1; background:#ea580c; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">💾 Update Item</button>
+                        <button type="button" onclick="saveMenuEdit('add')" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">➕ Add Item</button>
+                        <button type="button" onclick="deleteMenuItem()" style="background:#dc2626; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ Delete Item</button>
                     </div>
                 </div>
             </div>
 
-            <button class="terms-btn" onclick="toggleTermsModal(true)">📜 የአገልግሎት ደንቦች (Terms)</button>
+            <button class="panel-toggle-btn" style="text-align:center;" onclick="toggleTermsModal(true)">📜 Terms & Conditions</button>
 
-            <div class="complaint-box">
+            <div style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; font-size: 11px; text-align: center; margin-bottom: 15px;">
                 <b>📝 ለአስተያየት እና ቅሬታ</b><br>በስልክ ቁጥር 0911000000 ይደውሉ
             </div>
         </div>
@@ -223,6 +220,23 @@
         </div>
     </div>
 
+    <!-- Hidden Native File Inputs -->
+    <input type="file" id="file-camera" accept="image/*" capture="environment" style="display:none;" onchange="handleFileSelect(event)">
+    <input type="file" id="file-gallery" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+
+    <!-- Image Selection Choice Modal (Telegram Style) -->
+    <div id="image-choice-modal" class="modal">
+        <div class="modal-content" style="text-align:center;">
+            <h3>📸 Select Photo Source</h3>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
+                <button onclick="triggerFilePicker('camera')" style="background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">📷 Take Photo (ካሜራ)</button>
+                <button onclick="triggerFilePicker('gallery')" style="background:#0284c7; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">🖼️ Choose from Gallery (ጋለሪ)</button>
+            </div>
+            <button class="close-modal" onclick="closeImageChoiceModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Main Header -->
     <div class="header">
         <button class="sidebar-btn" onclick="openSidebar()">☰</button>
         <h1>መሃሪ ሆቴል ዲጂታል ፉድ ሜኑ</h1>
@@ -244,17 +258,46 @@
         </div>
 
         <div class="tabs-container" id="dynamic-tabs"></div>
-
         <div id="dynamic-categories"></div>
     </div>
 
+    <!-- Floating Cart Bar -->
+    <div class="cart-bar" id="cart-bar">
+        <div>
+            <span style="font-size:13px; font-weight:bold; color:var(--primary-orange);" id="cart-count">🛒 Cart (0)</span><br>
+            <span style="font-size:11px; color:#a1a1aa;" id="cart-total-price">Total: 0 ብር</span>
+        </div>
+        <button class="cart-bar-btn" onclick="openCartModal()">View Order 📋</button>
+    </div>
+
+    <!-- Cart View Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <h3>🛒 Your Selected Items</h3>
+            <div id="cart-items-list" style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px; max-height:220px; overflow-y:auto;"></div>
+            
+            <textarea id="cart-global-note" class="order-note-input" style="height:50px; margin-bottom:10px;" placeholder="ልዩ ማስታወሻ ካለዎት እዚህ ይፃፉ..."></textarea>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; font-weight:bold; font-size:14px; margin-bottom:15px;">
+                <span>Total Amount:</span>
+                <span style="color:var(--primary-orange);" id="cart-modal-total">0 ብር</span>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+                <button onclick="sendCartOrder()" style="flex:2; background:var(--primary-orange); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">🚀 Send Full Order</button>
+                <button class="close-modal" style="flex:1; margin-top:0;" onclick="closeCartModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
     <div id="terms-modal" class="modal">
         <div class="modal-content">
-            <h3>📜 የሆቴሉ የአገልግሎት ደንቦች</h3>
+            <h3>📜 የአገልግሎት ደንቦች (Terms)</h3>
             <p>1. <b>የቦታ መለያ፡</b> ትዕዛዞች የሚስተናገዱት በሆቴሉ ክልል ውስጥ ላሉ ደንበኞች ብቻ ነው።</p>
             <p>2. <b>የትዕዛዝ ሁኔታ፡</b> ትዕዛዝ ከላኩ በኋላ በስክሪኑ ላይ የኩሽናውን ማረጋገጫ ይከታተሉ።</p>
-            <p>3. <b>ክፍያ፡</b> ክፍያ በጥሬ ገንዘብ (Cash) ወይም በስክሪኑ ላይ በተጠቀሱት የባንክ አካውንቶች በሞባይል ባንኪንግ መክፈል ይችላሉ።</p>
-            <button class="close-modal" onclick="toggleTermsModal(false)">ዝጋ</button>
+            <p>3. <b>ክፍያ፡</b> ክፍያ በጥሬ ገንዘብ (Cash) ወይም በሞባይል ባንኪንግ መክፈል ይችላሉ።</p>
+            <button class="close-modal" onclick="toggleTermsModal(false)">Close</button>
         </div>
     </div>
 
@@ -277,11 +320,11 @@
         let tableNum = "";
         let uploadedBase64Image = "";
 
-        // የተስተካከለው ቅደም ተከተል (የምግብ ዝርዝር መጀመሪያ ሆኗል)
-        let categories = {
-            "food": "🍽️ የምግብ ዝርዝር",
-            "drinks": "🥤 የለስላሳና መጠጦች"
-        };
+        // Categories ordered list
+        let categoriesList = [
+            { id: "food", name: "🍽️ የምግብ ዝርዝር" },
+            { id: "drinks", name: "🥤 የለስላሳና መጠጦች" }
+        ];
 
         let menuData = {
             "food": [
@@ -303,11 +346,11 @@
             ]
         };
 
+        let cartItems = [];
+
         window.onload = function() {
             initTableSelect();
             initTheme();
-
-            document.getElementById('edit-file-input').addEventListener('change', handleFileSelect);
 
             db.ref('settings').on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -323,10 +366,10 @@
                 }
             });
 
-            db.ref('categories').on('value', (snapshot) => {
+            db.ref('categoriesList').on('value', (snapshot) => {
                 const data = snapshot.val();
-                if(data) categories = data;
-                else db.ref('categories').set(categories);
+                if(data) categoriesList = data;
+                else db.ref('categoriesList').set(categoriesList);
                 renderTabsAndCategories();
                 populateEditSelects();
             });
@@ -365,12 +408,22 @@
             document.getElementById('theme-switch-btn').innerText = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
         }
 
+        function openImageChoiceModal() { document.getElementById('image-choice-modal').style.display = 'flex'; }
+        function closeImageChoiceModal() { document.getElementById('image-choice-modal').style.display = 'none'; }
+
+        function triggerFilePicker(type) {
+            closeImageChoiceModal();
+            if(type === 'camera') document.getElementById('file-camera').click();
+            else document.getElementById('file-gallery').click();
+        }
+
         function handleFileSelect(evt) {
             const file = evt.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     uploadedBase64Image = e.target.result;
+                    showToast("Photo selected successfully! 📸", "success");
                 };
                 reader.readAsDataURL(file);
             }
@@ -383,17 +436,17 @@
             catContainer.innerHTML = "";
 
             let isFirst = true;
-            let catIndex = 1;
 
-            for(let catKey in categories) {
-                const catName = categories[catKey];
+            categoriesList.forEach((catObj) => {
+                const catKey = catObj.id;
+                const catName = catObj.name;
                 
                 tabsContainer.innerHTML += `
                     <button class="tab-click ${isFirst ? 'active' : ''}" onclick="scrollToCategory('sec-${catKey}', this)">${catName}</button>`;
 
                 let itemsHTML = "";
                 const items = menuData[catKey] || [];
-                items.forEach((item, index) => {
+                items.forEach((item) => {
                     const imgTag = item.img ? 
                         `<img class="item-img-placeholder" src="${item.img}" alt="${item.name}">` : 
                         `<div class="item-img-placeholder">🍲</div>`;
@@ -402,7 +455,7 @@
                         <div class="menu-item" id="item-${item.id}">
                             ${imgTag}
                             <div class="item-info">
-                                <h3>${index + 1}. ${item.name}</h3>
+                                <h3>${item.name}</h3>
                                 <span class="item-price">${item.price} ብር</span>
                             </div>
                             <div class="qty-controls">
@@ -410,37 +463,28 @@
                                 <span class="qty-num" id="qty-${item.id}">1</span>
                                 <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
                             </div>
-                            <button class="order-btn" id="btn-${item.id}" onclick="placeOrder('${item.id}', '${item.name}', ${item.price})">🛎️ እዘዝ</button>
-                            <input type="text" id="note-${item.id}" class="order-note-input" placeholder="ልዩ ፍላጎት ካለ (ምሳሌ፦ ሳይበስል)...">
+                            <input type="text" id="note-${item.id}" class="order-note-input" placeholder="ልዩ ማስታወሻ (ምሳሌ፦ ሳይበስል)...">
+                            <div class="btn-group">
+                                <button class="order-btn" onclick="placeQuickOrder('${item.id}', '${item.name}', ${item.price})">⚡ Quick Order</button>
+                                <button class="cart-add-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">🛒 Add to Cart</button>
+                            </div>
                         </div>`;
                 });
 
                 catContainer.innerHTML += `
                     <div id="sec-${catKey}" class="category-block">
-                        <div class="category-title">${catIndex}. ${catName}</div>
+                        <div class="category-title">${catName}</div>
                         <div class="menu-list">${itemsHTML}</div>
                     </div>`;
 
                 isFirst = false;
-                catIndex++;
-            }
+            });
         }
 
         function scrollToCategory(id, btn) {
             document.querySelectorAll('.tab-click').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function showToast(message, type) {
-            const toast = document.getElementById("toast-notification");
-            toast.innerText = message;
-            toast.className = `toast-box ${type}`;
-            toast.style.display = "block";
-            
-            if (type !== "loading") {
-                setTimeout(() => { toast.style.display = "none"; }, 4000);
-            }
         }
 
         function changeQty(id, amount) {
@@ -452,11 +496,179 @@
             el.innerText = current;
         }
 
-        function syncTable() { 
-            tableNum = document.getElementById('main-table').value; 
-            const box = document.getElementById('table-container-box');
-            box.style.border = "1px solid var(--border-color)";
-            box.style.backgroundColor = "var(--card-bg)";
+        function addToCart(id, name, price) {
+            const qty = parseInt(document.getElementById(`qty-${id}`).innerText) || 1;
+            const note = document.getElementById(`note-${id}`).value.trim();
+
+            const existingIndex = cartItems.findIndex(i => i.id === id && i.note === note);
+            if(existingIndex > -1) {
+                cartItems[existingIndex].qty += qty;
+            } else {
+                cartItems.push({ id, name, price, qty, note });
+            }
+
+            document.getElementById(`qty-${id}`).innerText = "1";
+            document.getElementById(`note-${id}`).value = "";
+
+            updateCartUI();
+            showToast(`Added to cart: ${name}`, "success");
+        }
+
+        function updateCartUI() {
+            const totalCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            const bar = document.getElementById('cart-bar');
+            if(totalCount > 0) {
+                bar.style.display = 'flex';
+                document.getElementById('cart-count').innerText = `🛒 Cart (${totalCount})`;
+                document.getElementById('cart-total-price').innerText = `Total: ${totalPrice} ብር`;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        function openCartModal() {
+            const listEl = document.getElementById('cart-items-list');
+            listEl.innerHTML = "";
+            let totalPrice = 0;
+
+            cartItems.forEach((item, index) => {
+                const itemTotal = item.price * item.qty;
+                totalPrice += itemTotal;
+                listEl.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color);">
+                        <div>
+                            <b>${item.name}</b> x ${item.qty}<br>
+                            <span style="font-size:10px; color:var(--text-sub);">${item.note ? 'Note: ' + item.note : ''}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-weight:bold; color:var(--primary-orange);">${itemTotal} ብር</span>
+                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ef4444; font-weight:bold; cursor:pointer;">✕</button>
+                        </div>
+                    </div>`;
+            });
+
+            document.getElementById('cart-modal-total').innerText = `${totalPrice} ብር`;
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        function removeFromCart(index) {
+            cartItems.splice(index, 1);
+            updateCartUI();
+            openCartModal();
+            if(cartItems.length === 0) closeCartModal();
+        }
+
+        function closeCartModal() { document.getElementById('cart-modal').style.display = 'none'; }
+
+        async function sendCartOrder() {
+            if(!checkTableSelected()) return;
+            if(cartItems.length === 0) return;
+
+            const globalNote = document.getElementById('cart-global-note').value.trim();
+            const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+            const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            let msg = `🚨 አዲስ የተሰበሰበ ትዕዛዝ! [ID: ${orderId}]\n━━━━━━━━━━━━━\n📍 ቦታ፦ መሃሪ ሆቴል\n🪑 ${tableNum}\n\n📋 የታዘዙ ዝርዝር፦\n`;
+            
+            cartItems.forEach((item, idx) => {
+                msg += `${idx + 1}. ${item.name}  x ${item.qty} = ${item.price * item.qty} ብር\n`;
+                if(item.note) msg += `   └ ማስታወሻ፦ ${item.note}\n`;
+            });
+
+            if(globalNote) msg += `\n📝 ጠቅላላ ማስታወሻ፦ ${globalNote}\n`;
+            msg += `\n💰 ጠቅላላ ድምር፦ ${totalPrice} ብር\n━━━━━━━━━━━━━`;
+
+            db.ref(`orders/${orderId}`).set({
+                status: "pending",
+                table: tableNum,
+                items: cartItems,
+                price: totalPrice
+            });
+
+            listenOrderStatus(orderId);
+            closeCartModal();
+            showToast("Sending your cart order... ⏳", "loading");
+
+            await executeTelegramSend(msg, orderId);
+            cartItems = [];
+            updateCartUI();
+        }
+
+        async function placeQuickOrder(id, name, price) {
+            if(!checkTableSelected()) return;
+
+            const qty = parseInt(document.getElementById(`qty-${id}`).innerText) || 1;
+            const noteValue = document.getElementById(`note-${id}`).value.trim();
+            const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+            const totalItemPrice = price * qty;
+
+            let msg = `🚨 አዲስ ትዕዛዝ መጥቷል! [ID: ${orderId}]\n━━━━━━━━━━━━━\n📍 ቦታ፦ መሃሪ ሆቴል\n🪑 ${tableNum}\n🍽️ የታዘዘው፦ ${name}\n🔢 ብዛት፦ ${qty}`;
+            if (noteValue) msg += `\n📝 ማስታወሻ፦ ${noteValue}`;
+            msg += `\n💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር\n━━━━━━━━━━━━━`;
+
+            db.ref(`orders/${orderId}`).set({ status: "pending", table: tableNum, item: name, qty, price: totalItemPrice });
+
+            listenOrderStatus(orderId);
+            showToast("Sending order... ⏳", "loading");
+            
+            await executeTelegramSend(msg, orderId);
+            document.getElementById(`qty-${id}`).innerText = "1";
+            document.getElementById(`note-${id}`).value = "";
+        }
+
+        async function executeTelegramSend(msg, orderId) {
+            try {
+                const orderPromises = kitchenIds.map(chatId => {
+                    return fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            chat_id: chatId, 
+                            text: msg,
+                            reply_markup: {
+                                inline_keyboard: [[
+                                    { text: "✅ Accept Order", callback_data: `accept_${orderId}` }
+                                ]]
+                            }
+                        })
+                    });
+                });
+                
+                await Promise.all(orderPromises);
+                showToast("ትዕዛዝዎ በተሳካ ሁኔታ ደርሷል! ኩሽናው እስኪቀበለው ይጠብቁ... ⏳", "success");
+            } catch (error) {
+                showToast("ትዕዛዙ አልደረሰም! እባክዎ ኔትወርክዎን ያረጋግጡ። ❌", "error");
+            }
+        }
+
+        function listenOrderStatus(orderId) {
+            db.ref(`orders/${orderId}/status`).on('value', (snapshot) => {
+                if(snapshot.val() === 'accepted') {
+                    showToast("ትዕዛዝዎ በኩሽናው ተቀብሏል! 👨‍🍳 ምግቡ እየተዘጋጀ ነው...", "success");
+                }
+            });
+        }
+
+        function checkTableSelected() {
+            if (!tableNum) {
+                alert("🚨 እባክዎን የተቀመጡበትን የጠረጴዛ ቁጥር ይምረጡ!");
+                const boxEl = document.getElementById('table-container-box');
+                boxEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                boxEl.style.border = "2px solid #ef4444";
+                return false;
+            }
+            return true;
+        }
+
+        function syncTable() { tableNum = document.getElementById('main-table').value; }
+        function showToast(msg, type) {
+            const toast = document.getElementById("toast-notification");
+            toast.innerText = msg;
+            toast.className = `toast-box ${type}`;
+            toast.style.display = "block";
+            if (type !== "loading") setTimeout(() => { toast.style.display = "none"; }, 4000);
         }
 
         function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
@@ -477,7 +689,7 @@
                     document.getElementById('cfg-token').value = botToken;
                     document.getElementById('cfg-distance').value = allowedDist;
                 }
-            } else { alert("❌ የተሳሳተ ሚስጥራዊ ፒን ነው!"); }
+            } else { alert("❌ Invalid PIN!"); }
         }
 
         function addChatId() {
@@ -489,10 +701,7 @@
             }
         }
 
-        function removeChatId(index) {
-            kitchenIds.splice(index, 1);
-            renderChatIds();
-        }
+        function removeChatId(index) { kitchenIds.splice(index, 1); renderChatIds(); }
 
         function renderChatIds() {
             const container = document.getElementById('chat-ids-container');
@@ -513,15 +722,8 @@
             let np = document.getElementById('cfg-new-pin').value.trim();
             if(np) masterPin = np;
             
-            db.ref('settings').set({
-                pin: masterPin,
-                token: botToken,
-                kitchenIds: kitchenIds,
-                distance: allowedDist
-            }).then(() => {
-                alert("⚙️ የሲስተም ቅንብሮች በተሳካ ሁኔታ ተቀምጠዋል!");
-                document.getElementById('panel-settings').style.display = 'none';
-                document.getElementById('fields-settings').style.display = 'none';
+            db.ref('settings').set({ pin: masterPin, token: botToken, kitchenIds, distance: allowedDist }).then(() => {
+                alert("⚙️ Settings saved successfully!");
                 closeSidebar();
             });
         }
@@ -532,27 +734,27 @@
             if(!catSel || !itemSel) return;
 
             catSel.innerHTML = "";
-            itemSel.innerHTML = '<option value="">ለመቀየር/ለመሰረዝ ምግብ ይምረጡ...</option>';
+            itemSel.innerHTML = '<option value="">Select item to edit/delete...</option>';
 
-            for(let catKey in categories) {
-                catSel.options[catSel.options.length] = new Option(categories[catKey], catKey);
+            categoriesList.forEach(catObj => {
+                catSel.options[catSel.options.length] = new Option(catObj.name, catObj.id);
 
-                (menuData[catKey] || []).forEach(item => {
-                    itemSel.options[itemSel.options.length] = new Option(`${item.name} (${item.price} ብር)`, `${catKey}:${item.id}`);
+                (menuData[catObj.id] || []).forEach(item => {
+                    itemSel.options[itemSel.options.length] = new Option(`${item.name} (${item.price} ብር)`, `${catObj.id}:${item.id}`);
                 });
-            }
+            });
         }
 
         function addNewCategory() {
             const name = document.getElementById('cat-name-input').value.trim();
-            if(!name) { alert("⚠️ እባክዎ የምድብ ስም ያስገቡ!"); return; }
+            if(!name) { alert("⚠️ Enter Category Name!"); return; }
             const key = "cat_" + Date.now();
-            categories[key] = name;
+            categoriesList.push({ id: key, name: name });
             menuData[key] = [];
 
-            db.ref('categories').set(categories);
+            db.ref('categoriesList').set(categoriesList);
             db.ref('menu').set(menuData).then(() => {
-                alert("✅ አዲስ ምድብ ተጨምሯል!");
+                alert("✅ New category added!");
                 document.getElementById('cat-name-input').value = "";
             });
         }
@@ -560,29 +762,49 @@
         function editCategoryName() {
             const catKey = document.getElementById('edit-category-select').value;
             const newName = document.getElementById('cat-name-input').value.trim();
-            
-            if(!catKey) { alert("⚠️ እባክዎ የሚስተካከለውን ምድብ ከታችኛው ሳጥን ይምረጡ!"); return; }
-            if(!newName) { alert("⚠️ እባክዎ አዲሱን የምድብ ስም ከላይ ያስገቡ!"); return; }
+            if(!catKey || !newName) { alert("⚠️ Select category & enter new name!"); return; }
 
-            categories[catKey] = newName;
-            db.ref('categories').set(categories).then(() => {
-                alert("✏️ የምድቡ ስም በተሳካ ሁኔታ ተስተካክሏል!");
+            const cat = categoriesList.find(c => c.id === catKey);
+            if(cat) cat.name = newName;
+
+            db.ref('categoriesList').set(categoriesList).then(() => {
+                alert("✏️ Category name updated!");
                 document.getElementById('cat-name-input').value = "";
+            });
+        }
+
+        function moveCategory(dir) {
+            const catKey = document.getElementById('edit-category-select').value;
+            if(!catKey) { alert("⚠️ Select a category to move!"); return; }
+
+            const idx = categoriesList.findIndex(c => c.id === catKey);
+            if(idx === -1) return;
+
+            if(dir === 'up' && idx > 0) {
+                const temp = categoriesList[idx];
+                categoriesList[idx] = categoriesList[idx - 1];
+                categoriesList[idx - 1] = temp;
+            } else if(dir === 'down' && idx < categoriesList.length - 1) {
+                const temp = categoriesList[idx];
+                categoriesList[idx] = categoriesList[idx + 1];
+                categoriesList[idx + 1] = temp;
+            }
+
+            db.ref('categoriesList').set(categoriesList).then(() => {
+                showToast("Category order updated!", "success");
             });
         }
 
         function deleteCategory() {
             const catKey = document.getElementById('edit-category-select').value;
-            if(!catKey) { alert("⚠️ እባክዎ የሚሰረዝ ምድብ ይምረጡ!"); return; }
+            if(!catKey) { alert("⚠️ Select category to delete!"); return; }
 
-            if(confirm(`እርግጠኛ ነዎት "${categories[catKey]}" የሚለውን ምድብ መሰረዝ ይፈልጋሉ?`)) {
-                delete categories[catKey];
+            if(confirm("Are you sure you want to delete this category?")) {
+                categoriesList = categoriesList.filter(c => c.id !== catKey);
                 delete menuData[catKey];
 
-                db.ref('categories').set(categories);
-                db.ref('menu').set(menuData).then(() => {
-                    alert("🗑️ ምድቡ ተሰርዟል!");
-                });
+                db.ref('categoriesList').set(categoriesList);
+                db.ref('menu').set(menuData).then(() => { alert("🗑️ Category deleted!"); });
             }
         }
 
@@ -604,16 +826,14 @@
             const price = parseFloat(document.getElementById('edit-price').value);
             const catKey = document.getElementById('edit-category-select').value;
 
-            if(!name || isNaN(price)) { alert("⚠️ እባክዎ ስም እና ዋጋ ያስገቡ!"); return; }
-
+            if(!name || isNaN(price)) { alert("⚠️ Enter item name and price!"); return; }
             if(!menuData[catKey]) menuData[catKey] = [];
 
             if(action === 'add') {
-                const newId = "item_" + Date.now();
-                menuData[catKey].push({ id: newId, name: name, price: price, img: uploadedBase64Image });
+                menuData[catKey].push({ id: "item_" + Date.now(), name: name, price: price, img: uploadedBase64Image });
             } else if(action === 'update') {
                 const val = document.getElementById('edit-item-select').value;
-                if(!val) { alert("⚠️ የሚቀየር ምግብ ይምረጡ!"); return; }
+                if(!val) { alert("⚠️ Select item to update!"); return; }
                 const [oldCat, id] = val.split(':');
                 const oldIdx = menuData[oldCat].findIndex(i => i.id === id);
 
@@ -626,7 +846,7 @@
             }
 
             db.ref('menu').set(menuData).then(() => {
-                alert("📝 ሜኑው በተሳካ ሁኔታ ተዘምኗል!");
+                alert("📝 Menu item saved!");
                 document.getElementById('edit-name').value = "";
                 document.getElementById('edit-price').value = "";
                 uploadedBase64Image = "";
@@ -636,15 +856,13 @@
 
         function deleteMenuItem() {
             const val = document.getElementById('edit-item-select').value;
-            if(!val) { alert("⚠️ እባክዎ የሚሰረዝ ምግብ ይምረጡ!"); return; }
+            if(!val) { alert("⚠️ Select item to delete!"); return; }
             const [catKey, id] = val.split(':');
 
-            if(confirm("እርግጠኛ ነዎት ይህንን ምግብ መሰረዝ ይፈልጋሉ?")) {
+            if(confirm("Are you sure you want to delete this menu item?")) {
                 menuData[catKey] = menuData[catKey].filter(i => i.id !== id);
                 db.ref('menu').set(menuData).then(() => {
-                    alert("🗑️ ምግቡ ተሰርዟል!");
-                    document.getElementById('edit-name').value = "";
-                    document.getElementById('edit-price').value = "";
+                    alert("🗑️ Item deleted!");
                     closeSidebar();
                 });
             }
@@ -664,90 +882,11 @@
                 if(distance <= allowedDist) {
                     b.innerText = "✅ እርስዎ በመሃሪ ሆቴል ክልል ውስጥ ይገኛሉ። ማዘዝ ይችላሉ!"; 
                     b.className = "gps-status success";
-                    document.querySelectorAll('.order-btn').forEach(btn => btn.disabled = false);
                 } else {
                     b.innerText = `❌ ከሆቴሉ ክልል ውጪ ነዎት (${Math.round(distance)} ሜትር)። ማዘዝ አይችሉም!`; 
                     b.className = "gps-status";
-                    document.querySelectorAll('.order-btn').forEach(btn => btn.disabled = true);
                 }
             }, () => {}, { enableHighAccuracy: true });
-        }
-
-        async function placeOrder(id, name, price) {
-            const boxEl = document.getElementById('table-container-box');
-
-            if (tableNum === "" || tableNum === null) {
-                alert("🚨 እባክዎን የተቀመጡበትን የጠረጴዛ ቁጥር ይምረጡ!");
-                boxEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                boxEl.style.border = "2px solid #ef4444";
-                return;
-            }
-
-            if(!botToken || kitchenIds.length === 0) { 
-                showToast("⚠️ ቦት እና ቻት አይዲ በቅንብር ያዋቅሩ!", "error"); 
-                return; 
-            }
-            
-            const qty = parseInt(document.getElementById(`qty-${id}`).innerText) || 1;
-            const totalItemPrice = price * qty;
-            const noteValue = document.getElementById(`note-${id}`).value.trim();
-            const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-
-            let msg = `🚨 አዲስ ትዕዛዝ መጥቷል! [ID: ${orderId}]
-━━━━━━━━━━━━━
-📍 ቦታ፦ መሃሪ ሆቴል
-🪑 ${tableNum}
-🍽️ የታዘዘው፦ ${name}
-🔢 ብዛት፦ ${qty}`;
-
-            if (noteValue !== "") msg += `\n📝 ማስታወሻ፦ ${noteValue}`;
-            msg += `\n💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር\n━━━━━━━━━━━━━`;
-
-            db.ref(`orders/${orderId}`).set({
-                status: "pending",
-                table: tableNum,
-                item: name,
-                qty: qty,
-                price: totalItemPrice
-            });
-
-            // ኩሽናው "Accept Order" የሚለውን አዝራር ሲጫን በደንበኛው ስልክ ማስታወቂያ ያሳያል
-            db.ref(`orders/${orderId}/status`).on('value', (snapshot) => {
-                const status = snapshot.val();
-                if(status === 'accepted') {
-                    showToast("ትዕዛዝዎ በኩሽናው ተቀብሏል! 👨‍🍳 ምግቡ እየተዘጋጀ ነው...", "success");
-                }
-            });
-
-            showToast("ትዕዛዙ በመላክ ላይ ነው... ⏳", "loading");
-            
-            try {
-                // Telegram Message with Accept Inline Button
-                const orderPromises = kitchenIds.map(chatId => {
-                    return fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            chat_id: chatId, 
-                            text: msg,
-                            reply_markup: {
-                                inline_keyboard: [[
-                                    { text: "✅ ትዕዛዝ ተቀበል", callback_data: `accept_${orderId}` }
-                                ]]
-                            }
-                        })
-                    });
-                });
-                
-                await Promise.all(orderPromises);
-                showToast("ትዕዛዝዎ በተሳካ ሁኔታ ደርሷል! ኩሽናው እስኪቀበለው ይጠብቁ... ⏳", "success");
-                
-                document.getElementById(`qty-${id}`).innerText = "1";
-                document.getElementById(`note-${id}`).value = "";
-                
-            } catch (error) {
-                showToast("ትዕዛዙ አልደረሰም! እባክዎ ኔትወርክዎን ያረጋግጡ። ❌", "error");
-            }
         }
     </script>
 </body>
