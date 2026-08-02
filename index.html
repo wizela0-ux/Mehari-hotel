@@ -17,7 +17,7 @@
             --primary-orange: #f97316;
             --primary-hover: #ea580c;
             --border-color: #fed7aa;
-            --shadow-color: rgba(249, 115, 22, 0.08);
+            --shadow-color: rgba(249, 115, 22, 0.1);
             --header-grad-1: #ea580c;
             --header-grad-2: #c2410c;
             --input-bg: #fff7ed;
@@ -37,10 +37,22 @@
             --input-bg: #27272a;
         }
 
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; }
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 30px; }
         
-        .header { background: linear-gradient(135deg, var(--header-grad-1), var(--header-grad-2)); color: white; padding: 22px 15px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        /* Keyframe Motion Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseOrange {
+            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+        }
+
+        .header { background: linear-gradient(135deg, var(--header-grad-1), var(--header-grad-2)); color: white; padding: 22px 15px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px; }
         
         .bank-accounts { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; font-size: 11px; opacity: 0.95; font-weight: 500; }
@@ -59,15 +71,17 @@
         .tabs-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; margin-bottom: 18px; scrollbar-width: none; }
         .tabs-container::-webkit-scrollbar { display: none; }
         .tab-click { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; font-size: 13px; }
-        .tab-click.active { background: var(--primary-orange); color: white; border-color: var(--primary-orange); }
+        .tab-click.active { background: var(--primary-orange); color: white; border-color: var(--primary-orange); animation: pulseOrange 2s infinite; }
 
-        .category-block { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px var(--shadow-color); border: 1px solid var(--border-color); }
+        /* Dynamic Category & Item Animations */
+        .category-block { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px var(--shadow-color); border: 1px solid var(--border-color); animation: fadeInUp 0.5s ease-out forwards; }
         .category-title { font-size: 17px; color: var(--primary-orange); margin-bottom: 15px; border-left: 4px solid var(--primary-orange); padding-left: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         
         .menu-list { display: flex; flex-direction: column; gap: 15px; }
         
-        .menu-item { display: flex; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; align-items: center; flex-wrap: wrap; }
-        .menu-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .menu-item { display: flex; gap: 12px; border-bottom: 1px solid var(--border-color); padding: 10px 8px; border-radius: 12px; align-items: center; flex-wrap: wrap; animation: fadeInUp 0.4s ease forwards; }
+        .menu-item:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--shadow-color); background: var(--input-bg); }
+        .menu-item:last-child { border-bottom: none; }
         
         .item-img-placeholder { width: 70px; height: 70px; border-radius: 12px; background: var(--input-bg); border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary-orange); flex-shrink: 0; object-fit: cover; }
         .item-info { flex: 1; min-width: 120px; }
@@ -79,7 +93,8 @@
         .qty-num { font-weight: bold; font-size: 13px; min-width: 16px; text-align: center; }
 
         .order-btn { background: var(--primary-orange); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .order-btn:disabled { background: #a1a1aa; cursor: not-allowed; }
+        .order-btn:hover { background: var(--primary-hover); transform: scale(1.03); }
+        .order-btn:disabled { background: #a1a1aa; cursor: not-allowed; transform: none; }
 
         .order-note-input { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 11px; color: var(--text-main); background: var(--input-bg); outline: none; }
 
@@ -162,9 +177,10 @@
                 <div id="fields-edit" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
                     
                     <label style="font-weight:bold; font-size:11px;">📁 የምድብ (Category) አስተዳደር፦</label>
-                    <input type="text" id="new-cat-name" placeholder="አዲስ ምድብ ስም...">
-                    <div style="display:flex; gap:4px;">
-                        <button type="button" onclick="addNewCategory()" style="flex:1; background:#2563eb; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">➕ አዲስ ምድብ ጨምር</button>
+                    <input type="text" id="cat-name-input" placeholder="የምድብ ስም ያስገቡ...">
+                    <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                        <button type="button" onclick="addNewCategory()" style="flex:1; background:#2563eb; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">➕ አዲስ ጨምር</button>
+                        <button type="button" onclick="editCategoryName()" style="flex:1; background:#f59e0b; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ ምድብ አስተካክል</button>
                         <button type="button" onclick="deleteCategory()" style="background:#dc2626; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">🗑️ ምድብ ሰርዝ</button>
                     </div>
 
@@ -178,7 +194,7 @@
                     <input type="number" id="edit-price" placeholder="ዋጋ...">
                     
                     <label style="font-size:10px; font-weight:bold;">📸 ፎቶ ይምረጡ ወይም በካሜራ ያንሱ፦</label>
-                    <input type="file" id="edit-file-input" accept="image/*">
+                    <input type="file" id="edit-file-input" accept="image/*" capture="environment">
 
                     <select id="edit-category-select"></select>
 
@@ -246,12 +262,13 @@
     <div id="toast-notification" class="toast-box"></div>
 
     <script>
-        // የወራቢ መገኛ (Coordinates Placeholder)
+        // የወራቢ መገኛ Coordinates
         const CAFE_LAT = 8.0123;  
         const CAFE_LON = 38.0722; 
 
+        // ለመሃሪ ሆቴል የተከፈተው አዲሱ የFirebase Database URL
         const firebaseConfig = {
-            databaseURL: "https://sheger-menu-default-rtdb.firebaseio.com/"
+            databaseURL: "https://mehari-hotel-default-rtdb.firebaseio.com/"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -303,6 +320,8 @@
                     allowedDist = parseFloat(data.distance) || 100;
                     renderChatIds();
                     checkLocation();
+                } else {
+                    db.ref('settings').set({ pin: "1234", token: "", kitchenIds: [], distance: 100 });
                 }
             });
 
@@ -524,7 +543,7 @@
         }
 
         function addNewCategory() {
-            const name = document.getElementById('new-cat-name').value.trim();
+            const name = document.getElementById('cat-name-input').value.trim();
             if(!name) { alert("⚠️ እባክዎ የምድብ ስም ያስገቡ!"); return; }
             const key = "cat_" + Date.now();
             categories[key] = name;
@@ -533,7 +552,21 @@
             db.ref('categories').set(categories);
             db.ref('menu').set(menuData).then(() => {
                 alert("✅ አዲስ ምድብ ተጨምሯል!");
-                document.getElementById('new-cat-name').value = "";
+                document.getElementById('cat-name-input').value = "";
+            });
+        }
+
+        function editCategoryName() {
+            const catKey = document.getElementById('edit-category-select').value;
+            const newName = document.getElementById('cat-name-input').value.trim();
+            
+            if(!catKey) { alert("⚠️ እባክዎ የሚስተካከለውን ምድብ ከታችኛው ሳጥን ይምረጡ!"); return; }
+            if(!newName) { alert("⚠️ እባክዎ አዲሱን የምድብ ስም ከላይ ያስገቡ!"); return; }
+
+            categories[catKey] = newName;
+            db.ref('categories').set(categories).then(() => {
+                alert("✏️ የምድቡ ስም በተሳካ ሁኔታ ተስተካክሏል!");
+                document.getElementById('cat-name-input').value = "";
             });
         }
 
@@ -669,7 +702,6 @@
             if (noteValue !== "") msg += `\n📝 ማስታወሻ፦ ${noteValue}`;
             msg += `\n💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር\n━━━━━━━━━━━━━`;
 
-            // Firebase ላይ ትዕዛዙን መመዝገብ
             db.ref(`orders/${orderId}`).set({
                 status: "pending",
                 table: tableNum,
@@ -678,7 +710,6 @@
                 price: totalItemPrice
             });
 
-            // ሪልታይም የትዕዛዙን ሁኔታ (Status) መከታተል
             db.ref(`orders/${orderId}/status`).on('value', (snapshot) => {
                 const status = snapshot.val();
                 if(status === 'accepted') {
