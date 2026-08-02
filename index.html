@@ -40,7 +40,6 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; }
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 30px; }
         
-        /* Keyframe Motion Animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(18px); }
             to { opacity: 1; transform: translateY(0); }
@@ -73,7 +72,6 @@
         .tab-click { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; font-size: 13px; }
         .tab-click.active { background: var(--primary-orange); color: white; border-color: var(--primary-orange); animation: pulseOrange 2s infinite; }
 
-        /* Dynamic Category & Item Animations */
         .category-block { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px var(--shadow-color); border: 1px solid var(--border-color); animation: fadeInUp 0.5s ease-out forwards; }
         .category-title { font-size: 17px; color: var(--primary-orange); margin-bottom: 15px; border-left: 4px solid var(--primary-orange); padding-left: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         
@@ -177,7 +175,7 @@
                 <div id="fields-edit" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
                     
                     <label style="font-weight:bold; font-size:11px;">📁 የምድብ (Category) አስተዳደር፦</label>
-                    <input type="text" id="cat-name-input" placeholder="የምድብ ስም ያስገቡ...">
+                    <input type="text" id="cat-name-input" placeholder="የምድብ ስም (ምሳሌ፦ 1. ቁርስ)...">
                     <div style="display:flex; gap:4px; flex-wrap:wrap;">
                         <button type="button" onclick="addNewCategory()" style="flex:1; background:#2563eb; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">➕ አዲስ ጨምር</button>
                         <button type="button" onclick="editCategoryName()" style="flex:1; background:#f59e0b; color:white; border:none; padding:6px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ ምድብ አስተካክል</button>
@@ -193,8 +191,9 @@
                     <input type="text" id="edit-name" placeholder="የምግብ ስም...">
                     <input type="number" id="edit-price" placeholder="ዋጋ...">
                     
-                    <label style="font-size:10px; font-weight:bold;">📸 ፎቶ ይምረጡ ወይም በካሜራ ያንሱ፦</label>
-                    <input type="file" id="edit-file-input" accept="image/*" capture="environment">
+                    <!-- Updated File Input (Now opens Gallery or Camera dynamically) -->
+                    <label style="font-size:11px; font-weight:bold; color:var(--primary-orange);">📸 ፎቶ ይምረጡ ወይም በካሜራ ያንሱ፦</label>
+                    <input type="file" id="edit-file-input" accept="image/*">
 
                     <select id="edit-category-select"></select>
 
@@ -262,11 +261,9 @@
     <div id="toast-notification" class="toast-box"></div>
 
     <script>
-        // የወራቢ መገኛ Coordinates
         const CAFE_LAT = 8.0123;  
         const CAFE_LON = 38.0722; 
 
-        // ለመሃሪ ሆቴል የተከፈተው አዲሱ የFirebase Database URL
         const firebaseConfig = {
             databaseURL: "https://mehari-hotel-default-rtdb.firebaseio.com/"
         };
@@ -280,6 +277,7 @@
         let tableNum = "";
         let uploadedBase64Image = "";
 
+        // የተስተካከለው ቅደም ተከተል (የምግብ ዝርዝር መጀመሪያ ሆኗል)
         let categories = {
             "food": "🍽️ የምግብ ዝርዝር",
             "drinks": "🥤 የለስላሳና መጠጦች"
@@ -385,6 +383,8 @@
             catContainer.innerHTML = "";
 
             let isFirst = true;
+            let catIndex = 1;
+
             for(let catKey in categories) {
                 const catName = categories[catKey];
                 
@@ -417,11 +417,12 @@
 
                 catContainer.innerHTML += `
                     <div id="sec-${catKey}" class="category-block">
-                        <div class="category-title">${catName}</div>
+                        <div class="category-title">${catIndex}. ${catName}</div>
                         <div class="menu-list">${itemsHTML}</div>
                     </div>`;
 
                 isFirst = false;
+                catIndex++;
             }
         }
 
@@ -710,6 +711,7 @@
                 price: totalItemPrice
             });
 
+            // ኩሽናው "Accept Order" የሚለውን አዝራር ሲጫን በደንበኛው ስልክ ማስታወቂያ ያሳያል
             db.ref(`orders/${orderId}/status`).on('value', (snapshot) => {
                 const status = snapshot.val();
                 if(status === 'accepted') {
@@ -720,6 +722,7 @@
             showToast("ትዕዛዙ በመላክ ላይ ነው... ⏳", "loading");
             
             try {
+                // Telegram Message with Accept Inline Button
                 const orderPromises = kitchenIds.map(chatId => {
                     return fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                         method: 'POST',
