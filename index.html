@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,8 +37,8 @@
             --input-bg: #27272a;
         }
 
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 120px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; transition: background-color 0.3s ease, color 0.3s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 90px; }
         
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(15px); }
@@ -57,14 +57,7 @@
         .gps-status { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 12px; font-size: 12px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #fca5a5; }
         .gps-status.success { background: #ffedd5; color: #9a3412; border-color: #fed7aa; }
 
-        .table-box { background: var(--card-bg); padding: 12px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px var(--shadow-color); border: 1px solid var(--border-color); transition: all 0.3s ease; }
-        
-        /* የቀይ ዋርኒንግ ስታይል ጠረጴዛው ላይ ሲከፈት */
-        .table-box.error-border {
-            border: 2px solid #ef4444 !important;
-            background-color: rgba(239, 68, 68, 0.05);
-        }
-
+        .table-box { background: var(--card-bg); padding: 12px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px var(--shadow-color); border: 1px solid var(--border-color); }
         .table-box label { font-size: 12px; font-weight: bold; color: var(--primary-orange); display: block; margin-bottom: 6px; }
         .table-box select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-weight: bold; background: var(--input-bg); color: var(--text-main); outline: none; }
 
@@ -99,77 +92,13 @@
         .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: #18181b; color: white; width: 90%; max-width: 440px; padding: 12px 20px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); display: none; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid #3f3f46; }
         .cart-bar-btn { background: var(--primary-orange); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
 
-        /* --------------------------------------------------
-           ከስር የሚወጣው የሁኔታ ባነር (Sending / Pending / Accepted)
-           -------------------------------------------------- */
-        .bottom-banner-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 2000;
-            padding: 10px;
-            background: transparent;
-            pointer-events: none;
-        }
-
-        .status-banner {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 12px 16px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 13px;
-            color: #ffffff;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
-            display: none;
-            pointer-events: auto;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        /* 1. SENDING - ብጫ/ብርቱካን ከለር ከስፒነር ጋር */
-        .status-banner.sending {
-            background-color: #f59e0b;
-            display: flex;
-        }
-
-        /* 2. PENDING - ሰማያዊ ከለር ከስፒነር ጋር */
-        .status-banner.pending {
-            background-color: #3b82f6;
-            display: flex;
-        }
-
-        /* 3. ACCEPTED - አረንጓዴ ከለር */
-        .status-banner.accepted {
-            background-color: #10b981;
-            display: flex;
-        }
-
-        /* የሽክርክሪት (Loading Spinner) አኒሜሽን */
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #ffffff;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Toast notifications styling */
         .toast-box { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #27272a; color: white; padding: 12px 24px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; font-weight: bold; font-size: 13px; text-align: center; max-width: 90%; display: none; }
         .toast-box.loading { background: #9a3412; border: 1px solid #fb923c; }
         .toast-box.success { background: #15803d; border: 1px solid #4ade80; }
         .toast-box.error { background: #991b1b; border: 1px solid #fca5a5; }
 
         /* Sidebar & Modals */
-        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--card-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 2000; transition: left 0.3s ease; padding: 20px; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100%; background: var(--card-bg); box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 2000; transition: left 0.3s ease; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
         .sidebar.active { left: 0; }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; }
         .sidebar-overlay.active { display: block; }
@@ -203,7 +132,7 @@
 
     <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-    <!-- Sidebar Controls (English UI) -->
+    <!-- Sidebar Controls -->
     <div class="sidebar" id="sidebar">
         <div>
             <div class="sidebar-header">
@@ -238,7 +167,6 @@
                 <input type="password" id="pin-edit" placeholder="Enter PIN...">
                 <button type="button" onclick="unlockPanel('edit')" style="background:#475569; color:white; border:none; padding:6px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:11px;">Verify PIN</button>
                 <div id="fields-edit" style="display:none; flex-direction:column; gap:8px; margin-top:8px;">
-                    
                     <label style="font-weight:bold; font-size:11px;">📁 Category Management:</label>
                     <input type="text" id="cat-name-input" placeholder="Category Name...">
                     <div style="display:flex; gap:4px; flex-wrap:wrap;">
@@ -261,7 +189,6 @@
                     <input type="number" id="edit-price" placeholder="Price...">
                     
                     <button type="button" onclick="openImageChoiceModal()" style="background:var(--input-bg); border:1px solid var(--border-color); color:var(--text-main); padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">📸 Select Photo Option</button>
-
                     <select id="edit-category-select"></select>
 
                     <div style="display:flex; gap:4px; flex-wrap:wrap;">
@@ -271,7 +198,6 @@
                     </div>
 
                     <hr style="border:0; border-top:1px solid var(--border-color); margin:5px 0;">
-                    
                     <button type="button" onclick="saveAndApplyMenu()" style="background:#16a34a; color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px; text-align:center; width:100%;">💾 Save & Apply Menu Changes</button>
                 </div>
             </div>
@@ -344,11 +270,6 @@
         <button class="cart-bar-btn" onclick="openCartModal()">View Order 📋</button>
     </div>
 
-    <!-- ከስር የሚወጣው የሁኔታ ማሳወቂያ ባነር (Bottom Fixed Status Banner) -->
-    <div class="bottom-banner-container">
-        <div id="statusBanner" class="status-banner"></div>
-    </div>
-
     <!-- Cart View Modal -->
     <div id="cart-modal" class="modal">
         <div class="modal-content">
@@ -383,6 +304,7 @@
     <div id="toast-notification" class="toast-box"></div>
 
     <script>
+        // GPS Coordinates (Worabe)
         const CAFE_LAT = 7.841134;  
         const CAFE_LON = 38.183795; 
 
@@ -393,7 +315,8 @@
         const db = firebase.database();
 
         let masterPin = "1234";
-        let botToken = "";
+        // Pre-integrated Bot Token
+        let botToken = "8818405487:AAF1n4fyHEZYcXg3ugIIB6KDNoDxy06DuV0"; 
         let kitchenIds = [];
         let allowedDist = 100;
         let tableNum = "";
@@ -434,13 +357,13 @@
                 const data = snapshot.val();
                 if(data) {
                     masterPin = data.pin || "1234";
-                    botToken = data.token || "";
+                    botToken = data.token || botToken;
                     kitchenIds = data.kitchenIds || [];
                     allowedDist = parseFloat(data.distance) || 100;
                     renderChatIds();
                     checkLocation();
                 } else {
-                    db.ref('settings').set({ pin: "1234", token: "", kitchenIds: [], distance: 100 });
+                    db.ref('settings').set({ pin: "1234", token: botToken, kitchenIds: [], distance: 100 });
                 }
             });
 
@@ -575,8 +498,6 @@
         }
 
         function addToCart(id, name, price) {
-            if(!checkTableSelected()) return; // ጠረጴዛ ካልተመረጠ ወደ ካርት መጨመርም ይከለክላል/ያሳስባል
-
             const qty = parseInt(document.getElementById(`qty-${id}`).innerText) || 1;
             const note = document.getElementById(`note-${id}`).value.trim();
 
@@ -642,36 +563,6 @@
 
         function closeCartModal() { document.getElementById('cart-modal').style.display = 'none'; }
 
-        // 3. የጠረጴዛ ምርጫ ማረጋገጫ እና Auto-Scroll Logic
-        function checkTableSelected() {
-            const tableBox = document.getElementById('table-container-box');
-            if (!tableNum) {
-                // ጠረጴዛ ካልተመረጠ ጠረጴዛው ያለበት ቦታ ገፍቶ (Smooth Scroll) ይወስዳል
-                tableBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // ቀይ ዋርኒንግ ቦርደር ማብራት
-                tableBox.classList.add('error-border');
-                showToast("⚠️ እባክዎ አስቀድመው የጠረጴዛ ቁጥር ይምረጡ!", "error");
-                return false;
-            }
-            return true;
-        }
-
-        // 4. ተጠቃሚው ጠረጴዛ መምረጥ ሲጀምር ቀዩ ዋርኒንግ ወዲያውኑ እንዲጠፋ ማድረግ
-        function syncTable() { 
-            tableNum = document.getElementById('main-table').value; 
-            const tableBox = document.getElementById('table-container-box');
-            if (tableNum) {
-                tableBox.classList.remove('error-border');
-            }
-        }
-
-        // ባነር ማሳያ ተግባር (Sending / Pending / Accepted)
-        function updateStatusBanner(statusClass, htmlContent) {
-            const banner = document.getElementById('statusBanner');
-            banner.className = `status-banner ${statusClass}`;
-            banner.innerHTML = htmlContent;
-        }
-
         async function sendCartOrder() {
             if(!checkTableSelected()) return;
             if(cartItems.length === 0) return;
@@ -680,13 +571,7 @@
             const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
             const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-            let msg = `🚨 አዲስ የተሰበሰበ ትዕዛዝ! [ID: ${orderId}]
-━━━━━━━━━━━━━
-📍 ቦታ፦ መሃሪ ሆቴል
-🪑 ${tableNum}
-
-📋 የታዘዙ ዝርዝር፦
-`;
+            let msg = `🚨 አዲስ የተሰበሰበ ትዕዛዝ! [ID: ${orderId}]\n━━━━━━━━━━━━━\n📍 ቦታ፦ መሃሪ ሆቴል\n🪑 ${tableNum}\n\n📋 የታዘዙ ዝርዝር፦\n`;
             
             cartItems.forEach((item, idx) => {
                 msg += `${idx + 1}. ${item.name}  x ${item.qty} = ${item.price * item.qty} ብር\n`;
@@ -695,9 +580,6 @@
 
             if(globalNote) msg += `\n📝 ጠቅላላ ማስታወሻ፦ ${globalNote}\n`;
             msg += `\n💰 ጠቅላላ ድምር፦ ${totalPrice} ብር\n━━━━━━━━━━━━━`;
-
-            // ደረጃ 1: SENDING (በመላክ ላይ - ብጫ ከለር ከስፒነር ጋር)
-            updateStatusBanner('sending', '<div class="spinner"></div> ትእዛዙ በመላክ ላይ ነው...');
 
             db.ref(`orders/${orderId}`).set({
                 status: "pending",
@@ -708,14 +590,9 @@
 
             listenOrderStatus(orderId);
             closeCartModal();
+            showToast("Sending your cart order... ⏳", "loading");
 
-            // ሰርቨር መላኩን በማስመሰል ወደ ፔንዲንግ መቀየር
-            setTimeout(async () => {
-                // ደረጃ 2: PENDING (በጠበቅ ላይ - ሰማያዊ ከለር ከስፒነር ጋር)
-                updateStatusBanner('pending', '<div class="spinner"></div> ትእዛዙ ተልኳል! ኩሽናው እስኪቀበል በመጠበቅ ላይ...');
-                await executeTelegramSend(msg, orderId);
-            }, 1000);
-
+            await executeTelegramSend(msg, orderId);
             cartItems = [];
             updateCartUI();
         }
@@ -728,34 +605,26 @@
             const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
             const totalItemPrice = price * qty;
 
-            let msg = `🚨 አዲስ ትዕዛዝ መጥቷል! [ID: ${orderId}]
-━━━━━━━━━━━━━
-📍 ቦታ፦ መሃሪ ሆቴል
-🪑 ${tableNum}
-🍽️ የታዘዘው፦ ${name}
-🔢 ብዛት፦ ${qty}`;
+            let msg = `🚨 አዲስ ትዕዛዝ መጥቷል! [ID: ${orderId}]\n━━━━━━━━━━━━━\n📍 ቦታ፦ መሃሪ ሆቴል\n🪑 ${tableNum}\n🍽️ የታዘዘው፦ ${name}\n🔢 ብዛት፦ ${qty}`;
             if (noteValue) msg += `\n📝 ማስታወሻ፦ ${noteValue}`;
             msg += `\n💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር\n━━━━━━━━━━━━━`;
-
-            // ደረጃ 1: SENDING (በመላክ ላይ)
-            updateStatusBanner('sending', '<div class="spinner"></div> ትእዛዙ በመላክ ላይ ነው...');
 
             db.ref(`orders/${orderId}`).set({ status: "pending", table: tableNum, item: name, qty, price: totalItemPrice });
 
             listenOrderStatus(orderId);
+            showToast("Sending order... ⏳", "loading");
             
-            setTimeout(async () => {
-                // ደረጃ 2: PENDING (በመጠበቅ ላይ)
-                updateStatusBanner('pending', '<div class="spinner"></div> ትእዛዙ ተልኳል! ኩሽናው እስኪቀበል በመጠበቅ ላይ...');
-                await executeTelegramSend(msg, orderId);
-            }, 1000);
-
+            await executeTelegramSend(msg, orderId);
             document.getElementById(`qty-${id}`).innerText = "1";
             document.getElementById(`note-${id}`).value = "";
         }
 
         async function executeTelegramSend(msg, orderId) {
             try {
+                if(kitchenIds.length === 0) {
+                    showToast("⚠️ እባክዎን በAdmin Panel የኩሽና Telegram Chat ID ያስገቡ!", "error");
+                    return;
+                }
                 const orderPromises = kitchenIds.map(chatId => {
                     return fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                         method: 'POST',
@@ -773,26 +642,32 @@
                 });
                 
                 await Promise.all(orderPromises);
+                showToast("ትዕዛዝዎ በተሳካ ሁኔታ ደርሷል! ኩሽናው እስኪቀበለው ይጠብቁ... ⏳", "success");
             } catch (error) {
-                showToast("ትዕዛዙ አልደረሰም! ኔትወርክ ይፈሹ። ❌", "error");
+                showToast("ትዕዛዙ አልደረሰም! እባክዎ ኔትወርክዎን ያረጋግጡ። ❌", "error");
             }
         }
 
-        // 1 & 2. ቴሌግራም ላይ Accept ሲነካ የሚሰራ እና የባነር ከለር ወደ አረንጓዴ መቀየር
         function listenOrderStatus(orderId) {
             db.ref(`orders/${orderId}/status`).on('value', (snapshot) => {
                 if(snapshot.val() === 'accepted') {
-                    // ደረጃ 3: ACCEPTED (ትዕዛዙ ተቀብሏል - አረንጓዴ ከለር፣ ሎዲንግ ይቆማል)
-                    updateStatusBanner('accepted', '✅ ትዕዛዝዎ በተሳካ ሁኔታ ተልኳል የኩሽናውን መቀበል ይተባበሩ - አክሴፕትድ ኦርደር!');
-                    
-                    // ከ 6 ሰከንድ በኋላ ባነሩ በራሱ ይጠፋል
-                    setTimeout(() => {
-                        document.getElementById('statusBanner').style.display = 'none';
-                    }, 6000);
+                    showToast("ትዕዛዝዎ በኩሽናው ተቀብሏል! 👨‍🍳 ምግቡ እየተዘጋጀ ነው...", "success");
                 }
             });
         }
 
+        function checkTableSelected() {
+            if (!tableNum) {
+                alert("🚨 እባክዎን የተቀመጡበትን የጠረጴዛ ቁጥር ይምረጡ!");
+                const boxEl = document.getElementById('table-container-box');
+                boxEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                boxEl.style.border = "2px solid #ef4444";
+                return false;
+            }
+            return true;
+        }
+
+        function syncTable() { tableNum = document.getElementById('main-table').value; }
         function showToast(msg, type) {
             const toast = document.getElementById("toast-notification");
             toast.innerText = msg;
@@ -804,14 +679,14 @@
         function openSidebar() { 
             document.getElementById('sidebar').classList.add('active'); 
             document.getElementById('overlay').classList.add('active'); 
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeSidebar() { 
             document.getElementById('sidebar').classList.remove('active'); 
             document.getElementById('overlay').classList.remove('active'); 
-            document.body.style.overflow = 'auto';
-            resetSidebarPanels();
+            document.body.style.overflow = 'auto'; 
+            resetSidebarPanels(); 
         }
 
         function resetSidebarPanels() {
@@ -868,7 +743,7 @@
         }
 
         function saveSettings() {
-            botToken = document.getElementById('cfg-token').value.trim();
+            botToken = document.getElementById('cfg-token').value.trim() || botToken;
             allowedDist = parseFloat(document.getElementById('cfg-distance').value) || 100;
             let np = document.getElementById('cfg-new-pin').value.trim();
             if(np) masterPin = np;
