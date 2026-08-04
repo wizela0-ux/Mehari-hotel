@@ -104,7 +104,7 @@
         .cart-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: #18181b; color: white; width: 90%; max-width: 440px; padding: 12px 20px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); display: none; justify-content: space-between; align-items: center; z-index: 1000; border: 1px solid #3f3f46; }
         .cart-bar-btn { background: var(--primary-orange); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
 
-        /* ከስር የሚወጣው የሁኔታ ባነር (Sending / Pending / Accepted) */
+        /* Status Banner */
         .bottom-banner-container {
             position: fixed;
             bottom: 0;
@@ -148,7 +148,7 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Toast notifications styling */
+        /* Toast notifications */
         .toast-box { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #27272a; color: white; padding: 12px 24px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 2000; font-weight: bold; font-size: 13px; text-align: center; max-width: 90%; display: none; }
         .toast-box.loading { background: #9a3412; border: 1px solid #fb923c; }
         .toast-box.success { background: #15803d; border: 1px solid #4ade80; }
@@ -183,6 +183,18 @@
         .btn-phone { background: #2563eb; }
         .btn-tg { background: #0284c7; }
         .btn-insta { background: #d97706; }
+
+        /* 🖼️ አዲስ የተጨመረ፦ የ Admin Image Preview Style */
+        #edit-img-preview {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: none;
+            margin: 8px auto;
+            border: 2px solid var(--primary-orange);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -247,6 +259,9 @@
                     <input type="number" id="edit-price" placeholder="Price...">
                     
                     <button type="button" onclick="openImageChoiceModal()" style="background:var(--input-bg); border:1px solid var(--border-color); color:var(--text-main); padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">📸 Select Photo Option</button>
+
+                    <!-- 🖼️ አዲስ የተጨመረ፦ የምስል ማሳያ (Preview Box) -->
+                    <img id="edit-img-preview" src="" alt="Photo Preview">
 
                     <select id="edit-category-select"></select>
 
@@ -383,7 +398,7 @@
         let allowedDist = 100;
         let tableNum = "";
         let uploadedBase64Image = "";
-        let isLocationAllowed = false; // GPS ፍቃድ/ቦታ ማረጋገጫ ፋይል
+        let isLocationAllowed = false; 
 
         let categoriesList = [
             { id: "food", name: "🍽️ የምግብ ዝርዝር" },
@@ -481,13 +496,43 @@
             else document.getElementById('file-gallery').click();
         }
 
+        /* 📸 የተሻሻለው handleFileSelect (Image Compress + Real-time Preview) */
         function handleFileSelect(evt) {
             const file = evt.target.files[0];
             if (file) {
+                showToast("Photos is processing...", "loading");
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    uploadedBase64Image = e.target.result;
-                    showToast("Photo selected successfully! 📸", "success");
+                    const img = new Image();
+                    img.onload = function() {
+                        // የፎቶ መጠንን መቀነሻ (Canvas Compression)
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 300; // ሰፋቱን ወደ 300px መቀነስ (Firebase DB እንዳይጨናነቅ)
+                        const scaleFactor = MAX_WIDTH / img.width;
+                        
+                        if (img.width > MAX_WIDTH) {
+                            canvas.width = MAX_WIDTH;
+                            canvas.height = img.height * scaleFactor;
+                        } else {
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                        }
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        // ፎቶውን ወደ Base64 እና 70% Quality መቀየር
+                        uploadedBase64Image = canvas.toDataURL('image/jpeg', 0.7);
+
+                        // 🖼️ በ Admin Panel ውስጥ Preview ማሳየት
+                        const preview = document.getElementById('edit-img-preview');
+                        if (preview) {
+                            preview.src = uploadedBase64Image;
+                            preview.style.display = 'block';
+                        }
+                        showToast("Photo processed & preview ready! 📸", "success");
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -687,7 +732,6 @@
             if(globalNote) msg += `\n📝 ጠቅላላ ማስታወሻ፦ ${globalNote}\n`;
             msg += `\n💰 ጠቅላላ ድምር፦ ${totalPrice} ብር\n━━━━━━━━━━━━━`;
 
-            // ደረጃ 1: SENDING (በመላክ ላይ)
             updateStatusBanner('sending', '<div class="spinner"></div> ትእዛዙ በመላክ ላይ ነው...');
 
             db.ref(`orders/${orderId}`).set({
@@ -701,7 +745,6 @@
             closeCartModal();
 
             setTimeout(async () => {
-                // ደረጃ 2: PENDING (በጠበቅ ላይ)
                 updateStatusBanner('pending', '<div class="spinner"></div> ትእዛዙ ተልኳል! ኩሽናው እስኪቀበል በመጠበቅ ላይ...');
                 await executeTelegramSend(msg, orderId);
             }, 1000);
@@ -731,7 +774,6 @@
             if (noteValue) msg += `\n📝 ማስታወሻ፦ ${noteValue}`;
             msg += `\n💰 ጠቅላላ ዋጋ፦ ${totalItemPrice} ብር\n━━━━━━━━━━━━━`;
 
-            // ደረጃ 1: SENDING (በመላክ ላይ)
             updateStatusBanner('sending', '<div class="spinner"></div> ትእዛዙ በመላክ ላይ ነው...');
 
             db.ref(`orders/${orderId}`).set({ status: "pending", table: tableNum, item: name, qty, price: totalItemPrice });
@@ -739,7 +781,6 @@
             listenOrderStatus(orderId);
             
             setTimeout(async () => {
-                // ደረጃ 2: PENDING (በመጠበቅ ላይ)
                 updateStatusBanner('pending', '<div class="spinner"></div> ትእዛዙ ተልኳል! ኩሽናው እስኪቀበል በመጠበቅ ላይ...');
                 await executeTelegramSend(msg, orderId);
             }, 1000);
@@ -775,7 +816,6 @@
         function listenOrderStatus(orderId) {
             db.ref(`orders/${orderId}/status`).on('value', (snapshot) => {
                 if(snapshot.val() === 'accepted') {
-                    // ደረጃ 3: ACCEPTED (ትዕዛዙ በኩሽናው ተቀብሏል)
                     updateStatusBanner('accepted', '✅ ትዕዛዝዎ በኩሽናው ተቀብሏል! በቅርብ ጊዜ ይደርሳል።');
                     
                     setTimeout(() => {
@@ -814,6 +854,7 @@
             document.getElementById('pin-settings').value = '';
             document.getElementById('pin-edit').value = '';
             document.getElementById('cfg-new-pin').value = '';
+            clearEditFields();
         }
 
         function toggleTermsModal(show) { document.getElementById('terms-modal').style.display = show ? 'flex' : 'none'; }
@@ -965,19 +1006,38 @@
             }
         }
 
+        /* 🖼️ የተሻሻለው loadItemToEdit (የነበረውን ፎቶ ለፕሪቪው ማውጫ) */
         function loadItemToEdit() {
             const val = document.getElementById('edit-item-select').value;
-            if(!val) return;
+            const preview = document.getElementById('edit-img-preview');
+            
+            if(!val) {
+                clearEditFields();
+                return;
+            }
+            
             const [catKey, id] = val.split(':');
             const item = (menuData[catKey] || []).find(i => i.id === id);
+            
             if(item) {
-                document.getElementById('edit-name').value = item.name;
-                document.getElementById('edit-price').value = item.price;
+                document.getElementById('edit-name').value = item.name || "";
+                document.getElementById('edit-price').value = item.price || "";
                 document.getElementById('edit-category-select').value = catKey;
                 uploadedBase64Image = item.img || "";
+
+                if (preview) {
+                    if (item.img && item.img.trim() !== "") {
+                        preview.src = item.img;
+                        preview.style.display = 'block';
+                    } else {
+                        preview.src = "";
+                        preview.style.display = 'none';
+                    }
+                }
             }
         }
 
+        /* 💾 የተሻሻለው saveMenuEdit */
         function saveMenuEdit(action) {
             let name = document.getElementById('edit-name').value.trim();
             const price = parseFloat(document.getElementById('edit-price').value);
@@ -1004,9 +1064,7 @@
 
             db.ref('menu').set(menuData).then(() => {
                 showToast("Menu item updated in draft!", "success");
-                document.getElementById('edit-name').value = "";
-                document.getElementById('edit-price').value = "";
-                uploadedBase64Image = "";
+                clearEditFields();
             });
         }
 
@@ -1019,9 +1077,21 @@
                 menuData[catKey] = menuData[catKey].filter(i => i.id !== id);
                 db.ref('menu').set(menuData).then(() => {
                     showToast("Item deleted!", "success");
-                    document.getElementById('edit-name').value = "";
-                    document.getElementById('edit-price').value = "";
+                    clearEditFields();
                 });
+            }
+        }
+
+        /* 🧹 የ Admin Edit ቅጽን ማጽጃ (Helper Function) */
+        function clearEditFields() {
+            document.getElementById('edit-name').value = "";
+            document.getElementById('edit-price').value = "";
+            document.getElementById('edit-item-select').value = "";
+            uploadedBase64Image = "";
+            const preview = document.getElementById('edit-img-preview');
+            if (preview) {
+                preview.src = "";
+                preview.style.display = "none";
             }
         }
 
